@@ -1,0 +1,156 @@
+services:
+  cluster1-master-node:
+    build: ./elasticsearch
+    container_name: cluster1-master-node
+    environment:
+      - node.name=cluster1-master-node
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=cluster1-data-node
+      - cluster.initial_master_nodes=cluster1-master-node,cluster1-data-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - type: bind
+        source: ./elasticsearch/config/elasticsearch.yml
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+      - data01:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - elastic
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+  cluster1-data-node:
+    build: ./elasticsearch
+    container_name: cluster1-data-node
+    environment:
+      - node.name=cluster1-data-node
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=cluster1-master-node
+      - cluster.initial_master_nodes=cluster1-master-node,cluster1-data-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - type: bind
+        source: ./elasticsearch/config/elasticsearch.yml
+        target: /usr/share/elasticsearch/config/elasticsearch.yml 
+      - data02:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+
+  ### elasticsearch set_up
+  es-set_up:
+    build: ./elasticsearch/config/
+    restart: "no"
+    depends_on:
+      cluster1-master-node:
+        condition: service_healthy
+    networks:
+      - elastic
+
+  ### logstash
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.15.1
+    container_name: logstash
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    environment:
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
+      - xpack.monitoring.enabled=false
+    volumes:
+      - type: bind
+        source: ./logstash/config/logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+        read_only: false
+      - type: bind
+        source: ./logstash/pipeline
+        target: /usr/share/logstash/pipeline
+        read_only: false
+      - type: bind
+        source: ./logstash/config/pipelines.yml
+        target: /usr/share/logstash/config/pipelines.yml
+        read_only: false
+      - type: bind
+        source: ./logstash/pipeline/csv-schema-short-numerical.csv
+        target: /usr/share/logstash/input_data
+    networks:
+      - elastic
+    depends_on:
+      - cluster1-data-node
+      - cluster1-master-node
+
+  ### kibana
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.15.1
+    environment:
+      - ELASTICSEARCH_HOSTS=["http://cluster1-master-node:9200"]
+    ports:
+      - 5601:5601
+    networks:
+      - elastic
+    depends_on:
+      - cluster1-data-node
+      - cluster1-master-node
+
+#  cluster2-master-node:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+#    container_name: cluster2-master-node
+#    environment:
+#      - node.name=cluster2-master-node
+#      - cluster.name=es-docker-cluster2
+#      - discovery.seed_hosts=cluster2-data-node
+#      - cluster.initial_master_nodes=cluster2-master-node,cluster2-data-node
+#      - bootstrap.memory_lock=true
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+#    volumes:
+#      - data03:/usr/share/elasticsearch/data
+#    ports:
+#      - 9201:9200
+#    networks:
+#      - elastic
+#
+#  cluster2-data-node:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+#    container_name: cluster2-data-node
+#    environment:
+#      - node.name=cluster2-data-node
+#      - cluster.name=es-docker-cluster2
+#      - discovery.seed_hosts=cluster2-master-node
+#      - cluster.initial_master_nodes=cluster2-master-node,cluster2-data-node
+#      - bootstrap.memory_lock=true
+#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#    ulimits:
+#      memlock:
+#        soft: -1
+#        hard: -1
+#    volumes:
+#       - data04:/usr/share/elasticsearch/data
+#    networks:
+#      - elastic
+
+volumes:
+  data01:
+    driver: local
+  data02:
+    driver: local
+networks:
+  elastic:
+    driver: bridge
