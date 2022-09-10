@@ -1,4 +1,5 @@
 services:
+  ### elasticsearch (master-node 1, data-node 1)
   cluster1-master-node:
     build: ./elasticsearch
     container_name: cluster1-master-node
@@ -84,13 +85,20 @@ services:
         target: /usr/share/logstash/config/pipelines.yml
         read_only: false
       - type: bind
-        source: ./logstash/pipeline/csv-schema-short-numerical.csv
-        target: /usr/share/logstash/input_data
+        source: ./logstash/data/category.csv
+        target: /usr/share/logstash/input_data/category.csv
+      - type: bind
+        source: ./logstash/data/address.csv
+        target: /usr/share/logstash/input_data/address.csv
+      - type: volume
+        source: logstash-data
+        target: /usr/share/logstash/sincedb:rw
     networks:
       - elastic
     depends_on:
       - cluster1-data-node
       - cluster1-master-node
+      - es-set_up
 
   ### kibana
   kibana:
@@ -150,6 +158,8 @@ volumes:
   data01:
     driver: local
   data02:
+    driver: local
+  logstash-data:
     driver: local
 networks:
   elastic:
