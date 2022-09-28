@@ -6,10 +6,12 @@ services:
     environment:
       - node.name=cluster1-master-node
       - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=cluster1-data-node
+      - discovery.seed_hosts=cluster1-data-node,cluster1-master-node
       - cluster.initial_master_nodes=cluster1-master-node,cluster1-data-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - node.data=false
+      - node.master=true
     ulimits:
       memlock:
         soft: -1
@@ -34,7 +36,7 @@ services:
     environment:
       - node.name=cluster1-data-node
       - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=cluster1-master-node
+      - discovery.seed_hosts=cluster1-data-node,cluster1-master-node
       - cluster.initial_master_nodes=cluster1-master-node,cluster1-data-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -42,6 +44,8 @@ services:
       memlock:
         soft: -1
         hard: -1
+    ports:
+      - "9201:9200"
     volumes:
       - type: bind
         source: ./elasticsearch/config/elasticsearch.yml
@@ -49,7 +53,7 @@ services:
       - data02:/usr/share/elasticsearch/data
     networks:
       - elastic
-
+      
   ### elasticsearch set_up
   es-set_up:
     build: ./elasticsearch/config/
@@ -113,46 +117,6 @@ services:
     depends_on:
       - cluster1-data-node
       - cluster1-master-node
-
-#  cluster2-master-node:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
-#    container_name: cluster2-master-node
-#    environment:
-#      - node.name=cluster2-master-node
-#      - cluster.name=es-docker-cluster2
-#      - discovery.seed_hosts=cluster2-data-node
-#      - cluster.initial_master_nodes=cluster2-master-node,cluster2-data-node
-#      - bootstrap.memory_lock=true
-#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#    ulimits:
-#      memlock:
-#        soft: -1
-#        hard: -1
-#    volumes:
-#      - data03:/usr/share/elasticsearch/data
-#    ports:
-#      - 9201:9200
-#    networks:
-#      - elastic
-#
-#  cluster2-data-node:
-#    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.1
-#    container_name: cluster2-data-node
-#    environment:
-#      - node.name=cluster2-data-node
-#      - cluster.name=es-docker-cluster2
-#      - discovery.seed_hosts=cluster2-master-node
-#      - cluster.initial_master_nodes=cluster2-master-node,cluster2-data-node
-#      - bootstrap.memory_lock=true
-#      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-#    ulimits:
-#      memlock:
-#        soft: -1
-#        hard: -1
-#    volumes:
-#       - data04:/usr/share/elasticsearch/data
-#    networks:
-#      - elastic
 
 volumes:
   data01:

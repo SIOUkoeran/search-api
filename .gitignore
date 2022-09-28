@@ -1,2 +1,5 @@
 ### csv file
 *.csv
+
+### idea
+*.idea
