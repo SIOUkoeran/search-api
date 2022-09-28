@@ -2,16 +2,14 @@ services:
   ### elasticsearch (master-node 1, data-node 1)
   cluster1-master-node:
     build: ./elasticsearch
-    container_name: cluster1-master-node
+    container_name: cluster1-master-node_test
     environment:
-      - node.name=cluster1-master-node
+      - node.name=cluster1-master-node_test
       - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=cluster1-data-node,cluster1-master-node
-      - cluster.initial_master_nodes=cluster1-master-node,cluster1-data-node
+      - discovery.seed_hosts=,cluster1-master-node_test
+      - cluster.initial_master_nodes=cluster1-master-node_test
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - node.data=false
-      - node.master=true
     ulimits:
       memlock:
         soft: -1
@@ -20,7 +18,7 @@ services:
       - type: bind
         source: ./elasticsearch/config/elasticsearch.yml
         target: /usr/share/elasticsearch/config/elasticsearch.yml
-      - data01:/usr/share/elasticsearch/data
+      - data01:/usr/share/elasticsearch/test/data
     ports:
       - "9200:9200"
     networks:
@@ -30,29 +28,6 @@ services:
       interval: 30s
       timeout: 30s
       retries: 5
-  cluster1-data-node:
-    build: ./elasticsearch
-    container_name: cluster1-data-node
-    environment:
-      - node.name=cluster1-data-node
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=cluster1-data-node,cluster1-master-node
-      - cluster.initial_master_nodes=cluster1-master-node,cluster1-data-node
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    ports:
-      - "9201:9200"
-    volumes:
-      - type: bind
-        source: ./elasticsearch/config/elasticsearch.yml
-        target: /usr/share/elasticsearch/config/elasticsearch.yml 
-      - data02:/usr/share/elasticsearch/data
-    networks:
-      - elastic
       
   ### elasticsearch set_up
   es-set_up:
@@ -100,28 +75,11 @@ services:
     networks:
       - elastic
     depends_on:
-      - cluster1-data-node
       - cluster1-master-node
       - es-set_up
 
-  ### kibana
-  kibana:
-    container_name: kibana
-    image: docker.elastic.co/kibana/kibana:7.15.1
-    environment:
-      - ELASTICSEARCH_HOSTS=["http://cluster1-master-node:9200"]
-    ports:
-      - 5601:5601
-    networks:
-      - elastic
-    depends_on:
-      - cluster1-data-node
-      - cluster1-master-node
-
 volumes:
   data01:
-    driver: local
-  data02:
     driver: local
   logstash-data:
     driver: local

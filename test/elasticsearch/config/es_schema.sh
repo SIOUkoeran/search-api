@@ -76,7 +76,7 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
 {
 	"settings" : {
     "index" : {
-      "number_of_shards" : 3,
+      "number_of_shards" : 1,
       "number_of_replicas" : 1,
       "max_ngram_diff" : "3"
     },
