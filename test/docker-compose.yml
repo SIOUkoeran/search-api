@@ -1,0 +1,88 @@
+services:
+  ### elasticsearch (master-node 1, data-node 1)
+  cluster1-master-node:
+    build: ./elasticsearch
+    container_name: cluster1-master-node_test
+    environment:
+      - node.name=cluster1-master-node_test
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=,cluster1-master-node_test
+      - cluster.initial_master_nodes=cluster1-master-node_test
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - type: bind
+        source: ./elasticsearch/config/elasticsearch.yml
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+      - data01:/usr/share/elasticsearch/test/data
+    ports:
+      - "9200:9200"
+    networks:
+      - elastic
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      
+  ### elasticsearch set_up
+  es-set_up:
+    build: ./elasticsearch/config/
+    restart: "no"
+    depends_on:
+      cluster1-master-node:
+        condition: service_healthy
+    networks:
+      - elastic
+
+  ### logstash
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.15.1
+    container_name: logstash
+    ports:
+      - "5000:5000/tcp"
+      - "5000:5000/udp"
+      - "9600:9600"
+    environment:
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
+      - xpack.monitoring.enabled=false
+    volumes:
+      - type: bind
+        source: ./logstash/config/logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+        read_only: false
+      - type: bind
+        source: ./logstash/pipeline
+        target: /usr/share/logstash/pipeline
+        read_only: false
+      - type: bind
+        source: ./logstash/config/pipelines.yml
+        target: /usr/share/logstash/config/pipelines.yml
+        read_only: false
+      - type: bind
+        source: ./logstash/data/category.csv
+        target: /usr/share/logstash/input_data/category.csv
+      - type: bind
+        source: ./logstash/data/address.csv
+        target: /usr/share/logstash/input_data/address.csv
+      - type: volume
+        source: logstash-data
+        target: /usr/share/logstash/sincedb:rw
+    networks:
+      - elastic
+    depends_on:
+      - cluster1-master-node
+      - es-set_up
+
+volumes:
+  data01:
+    driver: local
+  logstash-data:
+    driver: local
+networks:
+  elastic:
+    driver: bridge
