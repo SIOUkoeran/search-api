@@ -130,6 +130,9 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
         "analyzer" : "mixed_nori_analyzer",
         "search_analyzer" : "standard"
       },
+	  "address_suggest" : {
+		  "type" : "completion"
+	  },
       "san_bun" : {
         "type" : "text",
         "search_analyzer" : "standard",
