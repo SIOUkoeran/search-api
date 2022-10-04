@@ -66,6 +66,9 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 				"type" : "integer",
 				"null_value" : -1
 				},
+			"poi_suggest" : {
+		 		 "type" : "completion"
+	  		},
 			"zip_code" : {"type" : "integer"},
 			"location" : {"type" : "geo_point"}
 		}
