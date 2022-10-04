@@ -29,6 +29,7 @@ class AddressSuggestQueryRepositoryImplTest extends BaseTest {
     AddressSuggestQueryRepository addressSuggestQueryRepository;
 
     private final Logger logger = LoggerFactory.getLogger(AddressSuggestQueryRepositoryImplTest.class);
+
     @Test
     void testSuggestAddressQuery() {
         String input = "중랑";
