@@ -1,4 +1,4 @@
-package com.example.searchapi.elasticsearch.config;
+package com.example.searchapi.common.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.client.RestHighLevelClient;

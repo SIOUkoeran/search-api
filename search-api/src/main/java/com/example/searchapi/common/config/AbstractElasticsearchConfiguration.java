@@ -1,4 +1,4 @@
-package com.example.searchapi.elasticsearch.config;
+package com.example.searchapi.common.config;
 
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;

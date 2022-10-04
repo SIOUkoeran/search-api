@@ -1,7 +1,7 @@
 package com.example.searchapi.category.excpetionHandler;
 
-import com.example.searchapi.common.ErrorResponse;
 import com.example.searchapi.category.exception.NotFoundPoiException;
+import com.example.searchapi.common.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

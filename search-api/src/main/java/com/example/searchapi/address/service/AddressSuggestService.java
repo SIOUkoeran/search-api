@@ -1,19 +1,13 @@
 package com.example.searchapi.address.service;
 
 import com.example.searchapi.address.dto.SuggestAddressDto;
-import com.example.searchapi.address.model.Address;
 import com.example.searchapi.address.repository.AddressSuggestQueryRepository;
 import com.example.searchapi.common.query.QuerySuggestUtils;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.suggest.response.CompletionSuggestion;
-import org.springframework.data.elasticsearch.core.suggest.response.Suggest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service

@@ -2,13 +2,9 @@ package com.example.searchapi.address.repository;
 
 import com.example.searchapi.address.exception.NotFoundAddressException;
 import com.example.searchapi.address.model.Address;
-import com.example.searchapi.common.query.QueryPageUtils;
 import com.example.searchapi.common.query.QueryUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.lucene.queries.SearchAfterSortedDocQuery;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -16,7 +12,6 @@ import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Repository;
-
 
 import java.util.List;
 import java.util.stream.Collectors;

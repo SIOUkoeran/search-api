@@ -1,23 +1,20 @@
 package com.example.searchapi.common.query;
 
 import com.example.searchapi.address.model.Address;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.SuggestBuilders;
 import org.elasticsearch.search.suggest.SuggestionBuilder;
-
-
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
-
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.suggest.response.CompletionSuggestion;
 import org.springframework.stereotype.Component;
-import java.util.*;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 @Component
 @Slf4j
