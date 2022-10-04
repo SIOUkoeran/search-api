@@ -81,7 +81,6 @@ public class QuerySuggestUtils {
         AtomicInteger atomicInteger = new AtomicInteger(0);
         Arrays.stream(builder)
                 .forEach(b -> suggestBuilder.addSuggestion(queryName.get(atomicInteger.getAndIncrement()), b));
-
         return suggestBuilder;
     }
 }

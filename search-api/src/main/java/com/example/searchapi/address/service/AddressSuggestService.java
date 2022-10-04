@@ -29,4 +29,6 @@ public class AddressSuggestService {
         List<String> addressList = querySuggestUtils.convertToAddressList(compSuggestion);
         return new SuggestAddressDto.Response(addressList);
     }
+
+
 }

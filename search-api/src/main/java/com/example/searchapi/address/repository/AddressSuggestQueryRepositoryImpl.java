@@ -7,6 +7,7 @@ import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
+import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -31,7 +32,7 @@ public class AddressSuggestQueryRepositoryImpl implements AddressSuggestQueryRep
 
     @Override
     public Suggest.Suggestion<? extends Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option>> suggestAddressByAddress(String address) {
-        CompletionSuggestionBuilder completionQuery = querySuggestUtils.createCompletionQuery(address, 5);
+        CompletionSuggestionBuilder completionQuery = querySuggestUtils.createCompletionQuery(address, 5, "address_suggest");
         SuggestBuilder suggestQuery =querySuggestUtils.createSuggestBuilder(List.of("address-suggest"), completionQuery);
 
         NativeSearchQuery query = new NativeSearchQueryBuilder()
@@ -39,14 +40,13 @@ public class AddressSuggestQueryRepositoryImpl implements AddressSuggestQueryRep
                 .build()
                 ;
 
-        return Objects.requireNonNull(operations.search(query, Address.class, IndexCoordinates.of("address"))
-                        .getSuggest())
-                .getSuggestion("address-suggest");
+        SearchHits<Address> address1 = operations.search(query, Address.class, IndexCoordinates.of("address"));
+        return address1.getSuggest().getSuggestion("address-suggest");
     }
 
     @Override
     public List<SearchHit<Address>> suggestPrimaryBunByPrimary(String primaryBun) {
-        CompletionSuggestionBuilder completionQuery = querySuggestUtils.createCompletionQuery(primaryBun, 5);
+        CompletionSuggestionBuilder completionQuery = querySuggestUtils.createCompletionQuery(primaryBun, 5, "address_suggest");
         SuggestBuilder suggestQuery = querySuggestUtils.createSuggestBuilder(List.of("primary-suggest"), completionQuery);
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withSuggestBuilder(suggestQuery)
