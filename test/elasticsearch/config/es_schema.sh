@@ -66,6 +66,9 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 				"type" : "integer",
 				"null_value" : -1
 				},
+			"poi_suggest" : {
+		 		 "type" : "completion"
+	  		},
 			"zip_code" : {"type" : "integer"},
 			"location" : {"type" : "geo_point"}
 		}
@@ -130,6 +133,9 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
         "analyzer" : "mixed_nori_analyzer",
         "search_analyzer" : "standard"
       },
+	  "address_suggest" : {
+		  "type" : "completion"
+	  },
       "san_bun" : {
         "type" : "text",
         "search_analyzer" : "standard",

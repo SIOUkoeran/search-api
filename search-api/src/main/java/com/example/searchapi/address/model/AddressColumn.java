@@ -2,9 +2,6 @@ package com.example.searchapi.address.model;
 
 import lombok.Getter;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Getter
 public enum AddressColumn {
 

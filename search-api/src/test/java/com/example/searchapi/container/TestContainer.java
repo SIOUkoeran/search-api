@@ -2,7 +2,7 @@ package com.example.searchapi.container;
 
 import com.example.searchapi.address.repository.AddressQueryRepository;
 import com.example.searchapi.address.repository.AddressQueryRepositoryImpl;
-import com.example.searchapi.elasticsearch.config.AbstractElasticsearchConfiguration;
+import com.example.searchapi.common.config.AbstractElasticsearchConfiguration;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
@@ -10,15 +10,12 @@ import org.elasticsearch.client.indices.PutComposableIndexTemplateRequest;
 import org.elasticsearch.cluster.metadata.ComposableIndexTemplate;
 import org.elasticsearch.common.compress.CompressedXContent;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.cluster.metadata.Template;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.shaded.org.apache.commons.io.IOUtils;
 
 import java.io.IOException;

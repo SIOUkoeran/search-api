@@ -1,9 +1,9 @@
 package com.example.searchapi.poi.api;
 
 import com.example.searchapi.address.service.AddressService;
+import com.example.searchapi.category.service.CategoryService;
 import com.example.searchapi.poi.model.Poi;
 import com.example.searchapi.poi.service.PoiService;
-import com.example.searchapi.category.service.CategoryService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -42,7 +42,7 @@ services:
   ### logstash
   logstash:
     image: docker.elastic.co/logstash/logstash:7.15.1
-    container_name: logstash
+    container_name: test_logstash
     ports:
       - "5000:5000/tcp"
       - "5000:5000/udp"
@@ -69,9 +69,9 @@ services:
       - type: bind
         source: ./logstash/data/address.csv
         target: /usr/share/logstash/input_data/address.csv
-      - type: volume
-        source: logstash-data
-        target: /usr/share/logstash/sincedb:rw
+      # - type: volume
+      #   source: logstash-data
+      #   target: /usr/share/logstash/sincedb:rw
     networks:
       - elastic
     depends_on:
