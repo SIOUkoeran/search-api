@@ -4,6 +4,7 @@ import com.example.searchapi.address.exception.NotFoundAddressException;
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.common.query.QueryUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -36,26 +37,25 @@ public class AddressQueryRepositoryImpl implements AddressQueryRepository{
 
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withQuery(boolQuery()
-                        .must(
+                        .should(
                                 multiMatchQuery(address)
                                 .field(ADDRESS.getColumn())
                                 .field("address.edge")
-                                .type(BOOL_PREFIX)
-                        ).must(
+                                        .fuzziness(Fuzziness.ONE)
+                        ).should(
                                 multiMatchQuery(reversedAddressArray)
                                         .field(ADDRESS.getColumn())
                                         .field("address.edge")
-                                        .type(BOOL_PREFIX)
                         )
                         .should(
                                 multiMatchQuery(bun[0], PRIMARYBUN.getColumn())
                                         .boost(1.5f)
-                                        .type(BOOL_PREFIX)
+                                        .fuzziness(Fuzziness.ONE)
                         )
                         .should(
                                 multiMatchQuery(bun[1], SECONDATYBUN.getColumn())
                                         .boost(1.2f)
-                                        .type(BOOL_PREFIX)
+                                        .fuzziness(Fuzziness.ONE)
                         )
                 )
                 .withPageable(pageRequest)

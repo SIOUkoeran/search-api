@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.indices.AnalyzeRequest;
 import org.elasticsearch.client.indices.AnalyzeResponse;
+import org.elasticsearch.common.unit.Fuzziness;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
@@ -72,16 +73,12 @@ public class PoiQueryRepositoryImpl implements PoiQueryRepository {
 
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withQuery(boolQuery()
-                        .must(multiMatchQuery(name)
+                        .should(multiMatchQuery(name)
                                 .field("cname")
-                                .field("fname")
-                                .field("cname.edge").boost(2f)
-                                .type(BOOL_PREFIX))
-                        .must(multiMatchQuery(splitQueryReturnReverse(name))
-                                .field("cname")
-                                .field("fname")
-                                .field("fname.edge").boost(2f)
-                                .type(BOOL_PREFIX))
+                                .field("fname", 1.5f)
+                                .field("fname.edge")
+                                        .fuzziness(Fuzziness.TWO)
+                                )
                         )
                 .withPageable(pageRequest)
                 .build();
