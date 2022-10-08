@@ -1,7 +1,9 @@
 package com.example.searchapi.poi.service;
 
+import com.example.searchapi.poi.dto.CreatePoi;
 import com.example.searchapi.poi.model.Poi;
 import com.example.searchapi.poi.repository.PoiQueryRepository;
+import com.example.searchapi.poi.repository.PoiRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,11 @@ import java.util.List;
 public class PoiService {
 
     private final PoiQueryRepository poiQueryRepository;
+    private final PoiRepository poiRepository;
 
-    public PoiService(PoiQueryRepository poiQueryRepository) {
+    public PoiService(PoiQueryRepository poiQueryRepository, PoiRepository poiRepository) {
         this.poiQueryRepository = poiQueryRepository;
+        this.poiRepository = poiRepository;
     }
 
     @Transactional(readOnly = true)
@@ -47,5 +51,18 @@ public class PoiService {
     public List<Poi> searchQueryByName(String name, PageRequest pageRequest) {
         log.info("request poi by name");
         return this.poiQueryRepository.searchPoiByName(name, pageRequest);
+    }
+
+    public Poi createPoi(CreatePoi.Request request) {
+        String[] input = splitRequest(request.getFname(), request.getCname());
+        return this.poiRepository.save(new Poi(request, input));
+    }
+
+
+    private String[] splitRequest(String fname, String cname) {
+        return new String[]{
+                fname + " " + cname,
+                cname
+        };
     }
 }

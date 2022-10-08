@@ -1,15 +1,17 @@
 package com.example.searchapi.poi.api;
 
+import com.example.searchapi.address.dto.AddressDto;
 import com.example.searchapi.address.service.AddressService;
 import com.example.searchapi.category.service.CategoryService;
+import com.example.searchapi.poi.dto.CreatePoi;
 import com.example.searchapi.poi.model.Poi;
 import com.example.searchapi.poi.service.PoiService;
+import org.elasticsearch.Assertions;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -37,6 +39,14 @@ public class PoiController {
     public List<Poi> searchAllPoiByName(@RequestParam("name") String name,
                                         @RequestParam("page") int page) {
         return this.poiService.searchQueryByName(name, PageRequest.of(page, 20));
+    }
+
+    @PostMapping(value ="")
+    public ResponseEntity<CreatePoi.Response> createPoi(@Valid @RequestBody CreatePoi.Request request) {
+        Poi poi = this.poiService.createPoi(request);
+        CreatePoi.Response response = new CreatePoi.Response(poi,
+                this.addressService.createAddress(new AddressDto.RequestCreate(request), poi.getPoi_id()));
+        return ResponseEntity.ok().body(response);
     }
 
 }

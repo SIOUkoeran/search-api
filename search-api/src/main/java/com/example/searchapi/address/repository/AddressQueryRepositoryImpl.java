@@ -1,5 +1,6 @@
 package com.example.searchapi.address.repository;
 
+import com.example.searchapi.address.dto.AddressDto;
 import com.example.searchapi.address.exception.NotFoundAddressException;
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.common.query.QueryUtils;
