@@ -2,6 +2,7 @@ package com.example.searchapi.poi.model;
 
 
 import com.example.searchapi.poi.dto.CreatePoi;
+import com.example.searchapi.poi.dto.UpdatePoi;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,5 +55,18 @@ public class Poi {
         this.zip_code = request.getZipCode();
         this.location = new Location(request.getLon(), request.getLan());
         this.poi_suggest = new Completion(input);
+    }
+
+    public Poi update(UpdatePoi.Request request, String[] input) {
+        this.poi_code = request.getPoiCode();
+        this.fname = request.getFname();
+        this.cname = request.getCname();
+        this.phone_a = request.getPhoneA();
+        this.phone_b = request.getPhoneB();
+        this.phone_c = request.getPhoneC();
+        this.zip_code = request.getZipCode();
+        this.location = new Location(request.getLon(), request.getLan());
+        this.poi_suggest = new Completion(input);
+        return this;
     }
 }

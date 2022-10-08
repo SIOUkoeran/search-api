@@ -1,9 +1,10 @@
 package com.example.searchapi.poi.api;
 
-import com.example.searchapi.address.dto.AddressDto;
+import com.example.searchapi.address.dto.CreateAddressDto;
 import com.example.searchapi.address.service.AddressService;
 import com.example.searchapi.category.service.CategoryService;
 import com.example.searchapi.poi.dto.CreatePoi;
+import com.example.searchapi.poi.dto.UpdatePoi;
 import com.example.searchapi.poi.model.Poi;
 import com.example.searchapi.poi.service.PoiService;
 import org.elasticsearch.Assertions;
@@ -45,8 +46,22 @@ public class PoiController {
     public ResponseEntity<CreatePoi.Response> createPoi(@Valid @RequestBody CreatePoi.Request request) {
         Poi poi = this.poiService.createPoi(request);
         CreatePoi.Response response = new CreatePoi.Response(poi,
-                this.addressService.createAddress(new AddressDto.RequestCreate(request), poi.getPoi_id()));
+                this.addressService.createAddress(new CreateAddressDto.Request(request), poi.getPoi_id()));
         return ResponseEntity.ok().body(response);
     }
 
+    @DeleteMapping(value = "", params = {"id"})
+    public ResponseEntity<String> deletePoi(@RequestParam String id) {
+        this.poiService.deletePoi(id);
+        this.addressService.deleteAddress(id);
+        return ResponseEntity.status(204).body("DELETE SUCCESS");
+    }
+
+    @PutMapping(value ="", params = {"id"})
+    public ResponseEntity<UpdatePoi.Response> updatePoi(@RequestParam("id") String id,
+                                                        @Valid @RequestBody UpdatePoi.Request request) {
+        UpdatePoi.Response response = this.poiService.updatePoi(id, request);
+
+        return ResponseEntity.status(201).body(response);
+    }
 }

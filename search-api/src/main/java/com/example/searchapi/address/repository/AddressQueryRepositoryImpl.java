@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.searchapi.address.model.AddressColumn.*;
-import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.BOOL_PREFIX;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Repository
