@@ -1,5 +1,6 @@
 package com.example.searchapi.address.api;
 
+import com.example.searchapi.address.dto.AddressDto;
 import com.example.searchapi.address.dto.RequestAddressSearchAfter;
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.address.service.AddressService;
@@ -84,4 +85,10 @@ public class AddressController {
         List<String> poiCodes = this.categoryService.searchPoiCodesByCategory(category, "small_category");
         return this.addressService.searchNextAllAddressByPoiCodes(poiCodes, page, 20, List.of(request));
     }
+
+
+//    @PostMapping(value = "")
+//    public void createAddress(@RequestBody AddressDto.RequestCreate request) {
+//        this.addressService.createAddress();
+//    }
 }
