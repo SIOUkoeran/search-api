@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import javax.validation.constraints.NotEmpty;
+
 @NoArgsConstructor
 @Getter
 public class RequestAddress {
@@ -12,7 +14,7 @@ public class RequestAddress {
     @Getter
     public final static class address{
 
-        @NonNull
+        @NotEmpty
         private String address;
 
         @JsonProperty("san_bun")
