@@ -1,5 +1,6 @@
 package com.example.searchapi.address.repository;
 
+import com.example.searchapi.address.dto.AddressDto;
 import com.example.searchapi.address.model.Address;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;

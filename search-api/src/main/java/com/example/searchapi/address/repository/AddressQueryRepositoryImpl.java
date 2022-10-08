@@ -1,5 +1,6 @@
 package com.example.searchapi.address.repository;
 
+import com.example.searchapi.address.dto.AddressDto;
 import com.example.searchapi.address.exception.NotFoundAddressException;
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.common.query.QueryUtils;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.example.searchapi.address.model.AddressColumn.*;
-import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.BOOL_PREFIX;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Repository

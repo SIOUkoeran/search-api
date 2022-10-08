@@ -1,24 +1,28 @@
 package com.example.searchapi.poi.model;
 
 
+import com.example.searchapi.poi.dto.CreatePoi;
+import com.example.searchapi.poi.dto.UpdatePoi;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.CompletionField;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.core.suggest.Completion;
 
 import javax.persistence.Embedded;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
 
 @Document(indexName = "poi")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Poi {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String poi_id;
 
     private String poi_code;
@@ -27,15 +31,42 @@ public class Poi {
 
     private String cname;
 
-    private String phone_a;
+    private int phone_a;
 
-    private String phone_b;
+    private int phone_b;
 
-    private String phone_c;
+    private int phone_c;
 
-    private String zip_code;
+    private int zip_code;
 
     @Embedded
     private Location location;
 
+    @CompletionField
+    private Completion poi_suggest;
+
+    public Poi(CreatePoi.Request request, String[] input) {
+        this.poi_code = request.getPoiCode();
+        this.fname = request.getFname();
+        this.cname = request.getCname();
+        this.phone_a = request.getPhoneA();
+        this.phone_b = request.getPhoneB();
+        this.phone_c = request.getPhoneC();
+        this.zip_code = request.getZipCode();
+        this.location = new Location(request.getLon(), request.getLan());
+        this.poi_suggest = new Completion(input);
+    }
+
+    public Poi update(UpdatePoi.Request request, String[] input) {
+        this.poi_code = request.getPoiCode();
+        this.fname = request.getFname();
+        this.cname = request.getCname();
+        this.phone_a = request.getPhoneA();
+        this.phone_b = request.getPhoneB();
+        this.phone_c = request.getPhoneC();
+        this.zip_code = request.getZipCode();
+        this.location = new Location(request.getLon(), request.getLan());
+        this.poi_suggest = new Completion(input);
+        return this;
+    }
 }
