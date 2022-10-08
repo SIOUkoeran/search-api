@@ -44,12 +44,13 @@ public class Address {
                 '}';
     }
 
-    public Address(AddressDto.RequestCreate request, String[] addressSuggest) {
+    public Address(AddressDto.RequestCreate request, String[] addressSuggest, String poiId) {
         this.poi_code = request.getPoiCode();
         this.address = request.getAddress();
         this.san_bun = request.getSanBun();
         this.primary_bun = request.getPrimaryBun();
         this.secondary_bun = request.getSecondaryBun();
+        this.poi_id = poiId;
         this.address_suggest = new Completion(addressSuggest);
     }
 }

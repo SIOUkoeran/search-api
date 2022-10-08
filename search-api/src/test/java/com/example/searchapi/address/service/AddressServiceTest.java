@@ -43,7 +43,7 @@ public class AddressServiceTest extends BaseTest {
         int sanBun = 0;
         AddressDto.RequestCreate requestCreate
                 = new AddressDto.RequestCreate(poiCode, address, primaryBun, secondaryBun, sanBun);
-        AddressDto.ResponseCreate savedAddress = this.addressService.createAddress(requestCreate);
+        AddressDto.ResponseCreate savedAddress = this.addressService.createAddress(requestCreate, "1");
         log.info(savedAddress.getAddress());
         Assertions.assertThat(requestCreate.getAddress()).isEqualTo(savedAddress.getAddress());
         Assertions.assertThat(requestCreate.getPoiCode()).isEqualTo(savedAddress.getPoiCode());

@@ -18,25 +18,25 @@ public class ResponseAddress {
         private String cname;
 
         @JsonProperty("phone_a")
-        private String phoneA;
+        private int phoneA;
 
         @JsonProperty("phone_b")
-        private String phoneB;
+        private int phoneB;
 
         @JsonProperty("phone_c")
-        private String phoneC;
+        private int phoneC;
 
         @JsonProperty("zip_code")
-        private String zipCode;
+        private int zipCode;
 
 
-        public address(Poi POI) {
-            this.fname = POI.getFname();
-            this.cname = POI.getCname();
-            this.phoneA = POI.getPhone_a();
-            this.phoneB = POI.getPhone_b();
-            this.phoneC = POI.getPhone_c();
-            this.zipCode = POI.getZip_code();
+        public address(CreatePoi.Request request) {
+            this.fname = request.getFname();
+            this.cname = request.getCname();
+            this.phoneA = request.getPhoneA();
+            this.phoneB = request.getPhoneB();
+            this.phoneC = request.getPhoneC();
+            this.zipCode = request.getZipCode();
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.searchapi.address.dto;
 
 import com.example.searchapi.address.model.Address;
+import com.example.searchapi.poi.dto.CreatePoi;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,14 @@ public class AddressDto {
             this.primaryBun = primaryBun;
             this.secondaryBun = secondaryBun;
             this.sanBun = sanBun;
+        }
+
+        public RequestCreate(CreatePoi.Request request){
+            this.poiCode = request.getPoiCode();
+            this.address = request.getAddress();
+            this.primaryBun = request.getPrimaryBun();
+            this.secondaryBun = request.getSecondaryBun();
+            this.sanBun = request.getSanBun();
         }
     }
 

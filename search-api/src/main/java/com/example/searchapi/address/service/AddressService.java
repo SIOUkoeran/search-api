@@ -71,10 +71,11 @@ public class AddressService {
         return QueryPageUtils.convertListToPage(addresses, page, size);
     }
 
-    public AddressDto.ResponseCreate createAddress(AddressDto.RequestCreate request) {
+    public AddressDto.ResponseCreate createAddress(AddressDto.RequestCreate request, String poiId) {
 
+        log.info("request : {}", request.getAddress());
         String[] address = splitAddress(request);
-        Address savedAddress = this.addressRepository.save(new Address(request, address));
+        Address savedAddress = this.addressRepository.save(new Address(request, address, poiId));
         log.info("{}", savedAddress);
         return new AddressDto.ResponseCreate(savedAddress);
     }
