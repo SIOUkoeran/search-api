@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class CreatePoi {
 
@@ -21,13 +22,13 @@ public class CreatePoi {
         @NotBlank(message = "address 입력값이 비어있습니다.")
         private String address;
 
-        @NotBlank(message = "primary_bun 입력값이 비어있습니다.")
+        @NotNull(message = "primary_bun 입력값이 비어있습니다.")
         @JsonProperty("primary_bun")
-        private int primaryBun;
+        private Integer primaryBun;
 
-        @NotBlank(message = "secondary_bun 입력값이 비어있습니다.")
+        @NotNull(message = "secondary_bun 입력값이 비어있습니다.")
         @JsonProperty("secondary_bun")
-        private int secondaryBun;
+        private Integer secondaryBun;
 
         @JsonProperty("san_bun")
         private int sanBun;
@@ -49,10 +50,10 @@ public class CreatePoi {
         @JsonProperty("zip_code")
         private int zipCode;
 
-        @NotBlank(message = "위도값이 비어있습니다.")
+        @NotNull(message = "위도값이 비어있습니다.")
         private float lon;
 
-        @NotBlank(message = "경도값이 비어있습니다.")
+        @NotNull(message = "경도값이 비어있습니다.")
         private float lan;
 
         public Request(String poiCode, String address, int primaryBun, int secondaryBun, int sanBun,
@@ -70,6 +71,25 @@ public class CreatePoi {
             this.zipCode = zipCode;
             this.lon = lon;
             this.lan = lan;
+        }
+
+        @Override
+        public String toString() {
+            return "Request{" +
+                    "poiCode='" + poiCode + '\'' +
+                    ", address='" + address + '\'' +
+                    ", primaryBun=" + primaryBun +
+                    ", secondaryBun=" + secondaryBun +
+                    ", sanBun=" + sanBun +
+                    ", fname='" + fname + '\'' +
+                    ", cname='" + cname + '\'' +
+                    ", phoneA=" + phoneA +
+                    ", phoneB=" + phoneB +
+                    ", phoneC=" + phoneC +
+                    ", zipCode=" + zipCode +
+                    ", lon=" + lon +
+                    ", lan=" + lan +
+                    '}';
         }
     }
 

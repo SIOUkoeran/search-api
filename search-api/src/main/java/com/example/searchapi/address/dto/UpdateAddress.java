@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class UpdateAddress {
 
@@ -20,11 +21,11 @@ public class UpdateAddress {
         @NotBlank(message = "address 입력값이 비어있습니다.")
         private String address;
 
-        @NotBlank(message = "primary_bun 입력값이 비어있습니다.")
+        @NotNull(message = "primary_bun 입력값이 비어있습니다.")
         @JsonProperty("primary_bun")
         private int primaryBun;
 
-        @NotBlank(message = "secondary_bun 입력값이 비어있습니다.")
+        @NotNull(message = "secondary_bun 입력값이 비어있습니다.")
         @JsonProperty("secondary_bun")
         private int secondaryBun;
 

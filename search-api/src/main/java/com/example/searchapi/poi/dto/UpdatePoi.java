@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class UpdatePoi {
 
@@ -34,10 +35,10 @@ public class UpdatePoi {
         @JsonProperty("zip_code")
         private int zipCode;
 
-        @NotBlank(message = "위도값이 비어있습니다.")
+        @NotNull(message = "위도값이 비어있습니다.")
         private float lon;
 
-        @NotBlank(message = "경도값이 비어있습니다.")
+        @NotNull(message = "경도값이 비어있습니다.")
         private float lan;
 
         public Request(String poiCode, String fname, String cname,
