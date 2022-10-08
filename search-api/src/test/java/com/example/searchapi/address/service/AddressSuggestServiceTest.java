@@ -2,7 +2,6 @@ package com.example.searchapi.address.service;
 
 
 import com.example.searchapi.BaseTest;
-import com.example.searchapi.address.dto.AddressDto;
 import com.example.searchapi.address.dto.SuggestAddressDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
