@@ -1,7 +1,7 @@
 package com.example.searchapi.address.api;
 
-import com.example.searchapi.address.dto.AddressDto;
 import com.example.searchapi.address.dto.RequestAddressSearchAfter;
+import com.example.searchapi.address.dto.UpdateAddress;
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.address.service.AddressService;
 import com.example.searchapi.category.service.CategoryService;
@@ -9,6 +9,7 @@ import com.example.searchapi.poi.service.PoiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -86,9 +87,11 @@ public class AddressController {
         return this.addressService.searchNextAllAddressByPoiCodes(poiCodes, page, 20, List.of(request));
     }
 
-
-//    @PostMapping(value = "")
-//    public void createAddress(@RequestBody AddressDto.RequestCreate request) {
-//        this.addressService.createAddress();
-//    }
+    @PutMapping(value ="", params = {"id"})
+    public ResponseEntity<UpdateAddress.Response> updateAddress(@RequestParam("id") String id,
+                                                                @RequestBody UpdateAddress.Request request) {
+        return ResponseEntity
+                .status(200)
+                .body(this.addressService.updateAddress(id, request));
+    }
 }

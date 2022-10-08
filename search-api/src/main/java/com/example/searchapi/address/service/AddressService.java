@@ -1,6 +1,8 @@
 package com.example.searchapi.address.service;
 
-import com.example.searchapi.address.dto.AddressDto;
+import com.example.searchapi.address.dto.CreateAddressDto;
+import com.example.searchapi.address.dto.UpdateAddress;
+import com.example.searchapi.address.exception.NotFoundAddressException;
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.address.repository.AddressQueryRepository;
 import com.example.searchapi.address.repository.AddressRepository;
@@ -12,9 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -71,15 +71,17 @@ public class AddressService {
         return QueryPageUtils.convertListToPage(addresses, page, size);
     }
 
-    public AddressDto.ResponseCreate createAddress(AddressDto.RequestCreate request, String poiId) {
+    public CreateAddressDto.Response createAddress(CreateAddressDto.Request request, String poiId) {
 
-        log.info("request : {}", request.getAddress());
-        String[] address = splitAddress(request);
+        String[] address = splitAddress(request.getAddress(), request.getPrimaryBun(), request.getSecondaryBun());
         Address savedAddress = this.addressRepository.save(new Address(request, address, poiId));
         log.info("{}", savedAddress);
-        return new AddressDto.ResponseCreate(savedAddress);
+        return new CreateAddressDto.Response(savedAddress);
     }
 
+    public void deleteAddress(String poiId) {
+        this.addressRepository.deleteById(poiId);
+    }
     /**
      * 서울특별시 관악구 신림동
      * 관악구 신림동 610-50
@@ -87,16 +89,16 @@ public class AddressService {
      * 신림동 610-50
      * 610-50
      */
-    private String[] splitAddress(AddressDto.RequestCreate requestCreate) {
+    private String[] splitAddress(String addressString, int primaryBun, int secondaryBun) {
         String[] input = new String[4];
 
-        String[] address = requestCreate.getAddress().split(" ");
+        String[] address = addressString.split(" ");
         for (int i = 0; i < 3; i++) {
             input[i] = address[i];
         }
-        input[3] = String.valueOf(requestCreate.getPrimaryBun())
+        input[3] = String.valueOf(primaryBun)
                 + '-'
-                + String.valueOf(requestCreate.getSecondaryBun());
+                + String.valueOf(secondaryBun);
 
         String[] result = new String[4];
         StringBuilder sb = new StringBuilder();
@@ -108,5 +110,15 @@ public class AddressService {
             result[i] = String.valueOf(sb);
         }
         return result;
+    }
+
+    public UpdateAddress.Response updateAddress(String id, UpdateAddress.Request request) {
+
+        Address findAddress = this.addressRepository.findById(id)
+                .orElseThrow(NotFoundAddressException::new);
+        String[] input
+                = splitAddress(request.getAddress(), request.getPrimaryBun(), request.getSecondaryBun());
+        Address update = findAddress.update(request, input);
+        return new UpdateAddress.Response(this.addressRepository.save(update));
     }
 }

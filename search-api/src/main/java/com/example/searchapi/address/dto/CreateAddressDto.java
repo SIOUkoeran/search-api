@@ -6,13 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
-import org.springframework.validation.annotation.Validated;
 
-public class AddressDto {
+public class CreateAddressDto {
 
     @NoArgsConstructor
     @Getter
-    public static class RequestCreate{
+    public static class Request {
 
         @JsonProperty("poi_code")
         @NotBlank(message = "poi_code 입력값이 비어있습니다.")
@@ -32,7 +31,7 @@ public class AddressDto {
         @JsonProperty("san_bun")
         private int sanBun;
 
-        public RequestCreate(String poiCode, String address, int primaryBun, int secondaryBun, int sanBun) {
+        public Request(String poiCode, String address, int primaryBun, int secondaryBun, int sanBun) {
             this.poiCode = poiCode;
             this.address = address;
             this.primaryBun = primaryBun;
@@ -40,7 +39,7 @@ public class AddressDto {
             this.sanBun = sanBun;
         }
 
-        public RequestCreate(CreatePoi.Request request){
+        public Request(CreatePoi.Request request){
             this.poiCode = request.getPoiCode();
             this.address = request.getAddress();
             this.primaryBun = request.getPrimaryBun();
@@ -51,7 +50,7 @@ public class AddressDto {
 
     @NoArgsConstructor
     @Getter
-    public static class ResponseCreate{
+    public static class Response {
 
         @JsonProperty("poi_id")
         private String poiId;
@@ -70,7 +69,7 @@ public class AddressDto {
         @JsonProperty("san_bun")
         private int sanBun;
 
-        public ResponseCreate(Address address) {
+        public Response(Address address) {
             this.poiId = address.getPoi_id();
             this.poiCode = address.getPoi_code();
             this.address = address.getAddress();
