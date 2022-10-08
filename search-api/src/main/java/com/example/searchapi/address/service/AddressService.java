@@ -3,6 +3,7 @@ package com.example.searchapi.address.service;
 import com.example.searchapi.address.dto.CreateAddressDto;
 import com.example.searchapi.address.dto.UpdateAddress;
 import com.example.searchapi.address.exception.NotFoundAddressException;
+import com.example.searchapi.address.dto.AddressDto;
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.address.repository.AddressQueryRepository;
 import com.example.searchapi.address.repository.AddressRepository;
@@ -14,7 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service

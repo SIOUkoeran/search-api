@@ -7,6 +7,7 @@ import com.example.searchapi.poi.dto.CreatePoi;
 import com.example.searchapi.poi.dto.UpdatePoi;
 import com.example.searchapi.poi.model.Poi;
 import com.example.searchapi.poi.service.PoiService;
+import org.elasticsearch.Assertions;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -2,6 +2,7 @@ package com.example.searchapi.address.model;
 
 import com.example.searchapi.address.dto.CreateAddressDto;
 import com.example.searchapi.address.dto.UpdateAddress;
+import com.example.searchapi.address.dto.AddressDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.data.elasticsearch.core.suggest.Completion;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+
+import java.util.List;
 
 
 @Document(indexName = "address")
@@ -62,5 +65,15 @@ public class Address {
         this.secondary_bun = request.getSecondaryBun();
         this.address_suggest = new Completion(addressSuggest);
         return this;
+    }
+
+    public Address(AddressDto.RequestCreate request, String[] addressSuggest, String poiId) {
+        this.poi_code = request.getPoiCode();
+        this.address = request.getAddress();
+        this.san_bun = request.getSanBun();
+        this.primary_bun = request.getPrimaryBun();
+        this.secondary_bun = request.getSecondaryBun();
+        this.poi_id = poiId;
+        this.address_suggest = new Completion(addressSuggest);
     }
 }

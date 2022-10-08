@@ -1,5 +1,6 @@
 package com.example.searchapi.address.api;
 
+import com.example.searchapi.address.dto.AddressDto;
 import com.example.searchapi.address.dto.RequestAddressSearchAfter;
 import com.example.searchapi.address.dto.UpdateAddress;
 import com.example.searchapi.address.model.Address;
