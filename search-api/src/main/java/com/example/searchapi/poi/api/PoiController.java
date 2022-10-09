@@ -7,7 +7,6 @@ import com.example.searchapi.poi.dto.CreatePoi;
 import com.example.searchapi.poi.dto.UpdatePoi;
 import com.example.searchapi.poi.model.Poi;
 import com.example.searchapi.poi.service.PoiService;
-import org.elasticsearch.Assertions;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +46,7 @@ public class PoiController {
         Poi poi = this.poiService.createPoi(request);
         CreatePoi.Response response = new CreatePoi.Response(poi,
                 this.addressService.createAddress(new CreateAddressDto.Request(request), poi.getPoi_id()));
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(201).body(response);
     }
 
     @DeleteMapping(value = "", params = {"id"})

@@ -92,7 +92,7 @@ public class AddressController {
     public ResponseEntity<UpdateAddress.Response> updateAddress(@RequestParam("id") String id,
                                                                 @RequestBody UpdateAddress.Request request) {
         return ResponseEntity
-                .status(200)
+                .status(204)
                 .body(this.addressService.updateAddress(id, request));
     }
 }
