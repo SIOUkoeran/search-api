@@ -87,7 +87,6 @@ services:
     image: docker.elastic.co/kibana/kibana:7.15.1
     environment:
       - ELASTICSEARCH_HOSTS=["http://cluster1-master-node:9200"]
-      - status.allowAnonymous=true
       - ELASTIC_USERNAME=elastic
       - ELASTIC_USERPASSWORD=alstn977
     ports:
