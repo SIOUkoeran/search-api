@@ -9,6 +9,8 @@ services:
       - discovery.seed_hosts=,cluster1-master-node_test
       - cluster.initial_master_nodes=cluster1-master-node_test
       - bootstrap.memory_lock=true
+      - xpack.security.enabled=true
+      - ELASTIC_PASSWORD=alstn977
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
       memlock:
@@ -18,7 +20,7 @@ services:
       - type: bind
         source: ./elasticsearch/config/elasticsearch.yml
         target: /usr/share/elasticsearch/config/elasticsearch.yml
-      - data01:/usr/share/elasticsearch/test/data
+      - data01:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
     networks:
@@ -79,6 +81,24 @@ services:
       - cluster1-master-node
       - es-set_up
 
+### kibana
+  kibana:
+    container_name: kibana_test
+    image: docker.elastic.co/kibana/kibana:7.15.1
+    environment:
+      - ELASTICSEARCH_HOSTS=["http://cluster1-master-node:9200"]
+      - status.allowAnonymous=true
+      - ELASTIC_USERNAME=elastic
+      - ELASTIC_USERPASSWORD=alstn977
+    ports:
+      - 5601:5601
+    networks:
+      - elastic
+    depends_on:
+      - cluster1-master-node
+    links:
+      - cluster1-master-node
+    
 volumes:
   data01:
     driver: local
