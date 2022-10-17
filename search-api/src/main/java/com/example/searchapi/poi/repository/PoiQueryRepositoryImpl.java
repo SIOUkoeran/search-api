@@ -87,6 +87,27 @@ public class PoiQueryRepositoryImpl implements PoiQueryRepository {
                 .map(SearchHit::getContent)
                 .collect(Collectors.toList());
     }
+    @Override
+    public List<Poi> searchPoiByNameFilterPoiCodes(String name, List<String> poiCode, PageRequest pageRequest) {
+        NativeSearchQuery query = new NativeSearchQueryBuilder()
+                .withQuery(boolQuery()
+                        .must(multiMatchQuery(name)
+                                .field("cname")
+                                .field("fname", 1.5f)
+                                .field("fname.edge")
+                                .fuzziness(Fuzziness.TWO)
+                        )
+                        .filter(
+                                termsQuery("poi_code", poiCode)
+                        )
+                )
+                .withPageable(pageRequest)
+                .build();
+        return operations.search(query, Poi.class, IndexCoordinates.of("poi"))
+                .stream()
+                .map(SearchHit::getContent)
+                .collect(Collectors.toList());
+    }
 
     private String splitQueryReturnReverse(String query) {
         AnalyzeRequest standard = AnalyzeRequest.withGlobalAnalyzer("standard", query);
