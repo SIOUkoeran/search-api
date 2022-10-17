@@ -19,16 +19,12 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 				"nori_tokenizer" : {
 					"type" : "nori_tokenizer",
 					"decompound_mode" : "discard"
-				},
-				"fname_tokenizer" : {
-					"type" : "nori_tokenizer",
-					"decompound_mode" : "discard"
 				}
 			},
 			"analyzer" : {
 				"fname_nori_analyzer" : {
 					"type" : "custom",
-					"tokenizer" : "fname_tokenizer",
+					"tokenizer" : "nori_tokenizer",
 					"filter" : ["nori_readingform", "nori_number","shingle"]
 				},
 				"cname_nori_analyzer" : {
@@ -79,7 +75,7 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
 {
 	"settings" : {
     "index" : {
-      "number_of_shards" : 1,
+      "number_of_shards" : 3,
       "number_of_replicas" : 1,
       "max_ngram_diff" : "3"
     },
@@ -89,11 +85,6 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
           "type" : "shingle",
           "max_shingle_size" : 4,
           "token_separator" : ""
-        },
-        "bun_edge_ngram_filter" : {
-          "type" : "edge_ngram",
-          "min_gram" : 2,
-          "max_gram" : 4
         }
       },
       "tokenizer" : {
@@ -105,10 +96,6 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
           "type" : "edge_ngram",
           "min_gram" : 2,
           "max_gram" : 4
-        },
-        "split_bun_tokenizer" : {
-          "type" : "simple_pattern_split",
-          "pattern" : "-"
         }
       },
       "analyzer" : {
@@ -159,7 +146,7 @@ curl -XPUT http://cluster1-master-node:9200/category -H Content-Type:application
 {
 	"settings" : {
 		"index" : {
-			"number_of_shards" : 3,
+			"number_of_shards" : 1,
 			"number_of_replicas" : 1
 		},
 		"analysis" : {
