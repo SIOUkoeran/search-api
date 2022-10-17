@@ -1,4 +1,4 @@
 http.host: 0.0.0.0
 xpack.monitoring.elasticsearch.hosts:
 - http://cluster1-master-node:9200
-xpack.monitoring.enabled: false
+xpack.monitoring.enabled: true
