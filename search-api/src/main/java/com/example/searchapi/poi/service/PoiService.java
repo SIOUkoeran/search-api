@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 @Slf4j
+@Transactional
 public class PoiService {
 
     private final PoiQueryRepository poiQueryRepository;
@@ -81,4 +82,8 @@ public class PoiService {
         return new UpdatePoi.Response(save);
     }
 
+    @Transactional(readOnly = true)
+    public List<Poi> searchPoiByNameFilterPoiCodes(String name, List<String> poiCodes, PageRequest of) {
+        return this.poiQueryRepository.searchPoiByNameFilterPoiCodes(name, poiCodes, of);
+    }
 }

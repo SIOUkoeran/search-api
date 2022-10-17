@@ -61,14 +61,14 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
         NativeSearchQuery searchPoiQuery = new NativeSearchQueryBuilder()
                 .withQuery(termQuery("large_category", category))
                 .build();
-        return operationQueryReturnList(searchPoiQuery, Category.class, "poi", operations);
+        return QueryUtils.operationQueryReturnList(searchPoiQuery, Category.class, "poi", operations);
     }
 
-    private static<T> List<T> operationQueryReturnList(NativeSearchQuery query, Class<T> clazz,
-                                                       String index, ElasticsearchOperations operations){
-        return operations.search(query, clazz, IndexCoordinates.of(index))
-                .stream()
-                .map(SearchHit::getContent)
-                .collect(Collectors.toList());
+    @Override
+    public List<Category> searchCategoryCodeByField(String category, String field) {
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
+                .withQuery(termQuery(field, category))
+                .build();
+        return QueryUtils.operationQueryReturnList(searchQuery, Category.class, "category", operations);
     }
 }

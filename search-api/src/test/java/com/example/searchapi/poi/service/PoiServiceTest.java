@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.*;
 
@@ -115,5 +116,16 @@ class PoiServiceTest extends BaseTest {
 
         Assertions.assertThat(findPoi.getFname()).isEqualTo(changeFname);
         mustDeletePoiId.add(findPoi.getPoi_id());
+    }
+
+    @ParameterizedTest
+    @CsvSource({"오시오", "오시호", "오시오장"})
+    @DisplayName("poi 명칭 필터 검색 서비스 로직 테스트")
+    void testFilterSearchPoiName(
+            String fname
+    ) {
+        List<Poi> pois
+                = this.poiService.searchPoiByNameFilterPoiCodes(fname, List.of("0x2FFF"), PageRequest.of(0, 10));
+        Assertions.assertThat(pois.size()).isEqualTo(5);
     }
 }

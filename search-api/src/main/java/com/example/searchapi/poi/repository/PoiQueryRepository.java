@@ -12,4 +12,6 @@ public interface PoiQueryRepository {
     List<Poi> searchAddressByPoiCode(String poiCode, PageRequest pageRequest);
     List<Poi> searchAddressByPoiCodes(List<String> poiCategories, PageRequest pageRequest);
     List<Poi> searchPoiByName(String name, PageRequest pageRequest);
+
+    List<Poi> searchPoiByNameFilterPoiCodes(String name, List<String> poiCodes, PageRequest of);
 }

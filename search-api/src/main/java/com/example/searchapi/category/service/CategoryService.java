@@ -37,5 +37,8 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-
+    @Transactional(readOnly = true)
+    public List<String> searchPoiCodesByCategoryField(String category, String field) {
+        return getPoiCodes(this.categoryQueryRepository.searchCategoryCodeByField(category, field));
+    }
 }
