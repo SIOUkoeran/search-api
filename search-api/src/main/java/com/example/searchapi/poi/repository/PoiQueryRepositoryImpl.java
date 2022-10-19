@@ -7,6 +7,8 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.indices.AnalyzeRequest;
 import org.elasticsearch.client.indices.AnalyzeResponse;
 import org.elasticsearch.common.unit.Fuzziness;
+import org.elasticsearch.index.query.QueryRewriteContext;
+import org.elasticsearch.search.rescore.QueryRescorerBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
@@ -21,7 +23,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.BOOL_PREFIX;
+import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.*;
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Component
@@ -73,13 +75,29 @@ public class PoiQueryRepositoryImpl implements PoiQueryRepository {
 
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withQuery(boolQuery()
-                        .should(multiMatchQuery(name)
-                                .field("cname")
-                                .field("fname", 1.5f)
-                                .field("fname.edge")
-                                        .fuzziness(Fuzziness.TWO)
-                                )
+                        .should(queryStringQuery(name)
+                                .field("fname.keyword", 2f)
+                                .field("cname.keyword")
                         )
+                        .should(multiMatchQuery(name)
+                                .field("fname", 1.5f)
+                                .field("cname")
+                                .type(BOOL_PREFIX)
+                                .prefixLength(2)
+                        )
+                        .should(multiMatchQuery(name)
+                                .field("fname", 1.5f)
+                                .field("cname")
+                                .field("fname._2gram")
+                                .field("fname._3gram")
+                                .type(BEST_FIELDS)
+                                .fuzziness(Fuzziness.AUTO)
+                                .boost(0.3f)
+                                .fuzzyTranspositions(false)
+
+                        )
+
+                )
                 .withPageable(pageRequest)
                 .build();
         return operations.search(query, Poi.class, IndexCoordinates.of("poi"))
