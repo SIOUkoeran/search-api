@@ -4,7 +4,7 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 {
 	"settings" : {
 		"index" : {
-			"number_of_shards" : 3,
+			"number_of_shards" : 1,
 			"number_of_replicas" : 1
 		},
 		"analysis" : {
@@ -47,12 +47,22 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 			"fname" : {
 				"type" : "text",
 				"analyzer" : "fname_nori_analyzer",
-				"search_analyzer" : "standard"
+				"search_analyzer" : "standard",
+				"fields" : {
+					"keyword" : {
+						"type" : "keyword"
+					}
+				}
 				},
 			"cname" : {
 				"type" : "text",
 				"analyzer" : "cname_nori_analyzer",
-				"search_analyzer" : "standard"
+				"search_analyzer" : "standard",
+				"fields" : {
+					"keyword" : {
+						"type" : "keyword"
+					}
+				}
 				},
 			"phone_a" : {
 				"type" : "integer",
@@ -159,7 +169,7 @@ curl -XPUT http://cluster1-master-node:9200/category -H Content-Type:application
 {
 	"settings" : {
 		"index" : {
-			"number_of_shards" : 3,
+			"number_of_shards" : 1,
 			"number_of_replicas" : 1
 		},
 		"analysis" : {
