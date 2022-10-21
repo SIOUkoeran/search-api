@@ -66,7 +66,10 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 		 		 "type" : "completion"
 	  		},
 			"zip_code" : {"type" : "integer"},
-			"location" : {"type" : "geo_point"}
+			"location" : {"type" : "geo_point"},
+			"large_category" : {"type" : "keyword"},
+			"medium_category" : {"type" : "keyword"},
+			"small_category" : {"type" : "keyword"}
 		}
 	}
 }'

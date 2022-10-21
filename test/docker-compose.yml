@@ -70,6 +70,9 @@ services:
         source: ./logstash/data/category.csv
         target: /usr/share/logstash/input_data/category.csv
       - type: bind
+        source: ./logstash/data/category_dic.csv
+        target: /usr/share/logstash/input_data/category_dic.csv
+      - type: bind
         source: ./logstash/data/address.csv
         target: /usr/share/logstash/input_data/address.csv
       - type: volume
