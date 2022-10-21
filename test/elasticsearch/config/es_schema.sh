@@ -80,7 +80,10 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 		 		 "type" : "completion"
 	  		},
 			"zip_code" : {"type" : "integer"},
-			"location" : {"type" : "geo_point"}
+			"location" : {"type" : "geo_point"},
+			"large_category" : {"type" : "keyword"},
+			"medium_category" : {"type" : "keyword"},
+			"small_category" : {"type" : "keyword"}
 		}
 	}
 }'
@@ -163,36 +166,4 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
       }
     }
 }
-}'
-
-curl -XPUT http://cluster1-master-node:9200/category -H Content-Type:application/json -d '
-{
-	"settings" : {
-		"index" : {
-			"number_of_shards" : 1,
-			"number_of_replicas" : 1
-		},
-		"analysis" : {
-			"tokenizer" : {
-				"custom_nori_tokenzier" : {
-					"type" : "nori_tokenizer"
-				}
-			},
-			"analyzer" : {
-				"custom_nori_analyzer" : {
-					"type" : "custom",
-					"tokenizer" : "nori_tokenizer"
-				}
-			}
-		},
-		"refresh_interval" : "30s"
-	},
-	"mappings" : {
-		"properties" : {
-			"poi_code" : {"type" : "keyword"},
-			"large_category" : {"type" : "keyword"},
-			"medium_cateogry" : {"type" : "keyword"},
-			"small_category" : {"type" : "keyword"}
-		}
-	}
 }'
