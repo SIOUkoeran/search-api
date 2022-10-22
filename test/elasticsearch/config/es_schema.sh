@@ -13,6 +13,11 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 					"type" : "shingle",
 					"max_shingle_size" : 3,
 					"token_separator" : ""
+				},
+				"suggest_filter" : {
+					"type" : "edge_ngram",
+					"min_gram" : 2,
+					"max_gram" : 50
 				}
 			},
 			"tokenizer" : {
@@ -35,6 +40,15 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 					"type" : "custom",
 					"tokenizer" : "nori_tokenizer",
 					"filter" : ["shingle"]
+				},
+				"suggest_search_analyzer" : {
+					"type" : "custom",
+					"tokenizer" : "jaso_tokenizer"
+				},
+				"suggest_index_analyzer" : {
+					"type" : "custom",
+					"tokenizer" : "jaso_tokenizer",
+					"filter" : ["suggest_filter"]
 				}
 			}
 		},
@@ -53,7 +67,7 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 						"type" : "keyword"
 					}
 				}
-				},
+			},
 			"cname" : {
 				"type" : "text",
 				"analyzer" : "cname_nori_analyzer",
@@ -63,7 +77,7 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 						"type" : "keyword"
 					}
 				}
-				},
+			},
 			"phone_a" : {
 				"type" : "integer",
 				"null_value" : -1
@@ -76,9 +90,19 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 				"type" : "integer",
 				"null_value" : -1
 				},
-			"poi_suggest" : {
-		 		 "type" : "completion"
-	  		},
+				"poi_suggest" : {
+					"type" : "text",
+					"store": true,
+					"analyzer" : "suggest_index_analyzer",
+					"search_analyzer" : "suggest_search_analyzer",
+					"fields" : {
+						"suggest" : {
+							"type" : "completion",
+							"analyzer" : "suggest_index_analyzer",
+							"search_analyzer" : "suggest_search_analyzer"
+						}
+					}
+				},
 			"zip_code" : {"type" : "integer"},
 			"location" : {"type" : "geo_point"},
 			"large_category" : {"type" : "keyword"},
@@ -94,7 +118,7 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
     "index" : {
       "number_of_shards" : 1,
       "number_of_replicas" : 1,
-      "max_ngram_diff" : "3"
+	  "max_ngram_diff" : "100"
     },
     "analysis" : {
       "filter" : {
@@ -107,7 +131,12 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
           "type" : "edge_ngram",
           "min_gram" : 2,
           "max_gram" : 4
-        }
+        },
+		"suggest_filter" : {
+			"type" : "edge_ngram",
+			"min_gram" : 2,
+			"max_gram" : 50
+		}
       },
       "tokenizer" : {
         "nori_tokenizer" : {
@@ -132,7 +161,16 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
         "bun_analyzer" : {
           "type" : "custom",
           "tokenizer" : "bun_tokenizer"
-        }
+        },
+		"suggest_search_analyzer" : {
+			"type" : "custom",
+			"tokenizer" : "jaso_tokenizer"
+		},
+		"suggest_index_analyzer" : {
+			"type" : "custom",
+			"tokenizer" : "jaso_tokenizer",
+			"filter" : ["suggest_filter"]
+		}
       }
     },
     "refresh_interval" : "5s"
@@ -147,7 +185,17 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
         "search_analyzer" : "standard"
       },
 	  "address_suggest" : {
-		  "type" : "completion"
+		"type" : "text",
+		"store" : true,
+		"analyzer" : "suggest_index_analyzer",
+		"search_analyzer" : "suggest_search_analyzer",
+		"fields" : {
+			"suggest" : {
+				"type" : "completion",
+				"analyzer" : "suggest_index_analyzer",
+				"search_analyzer" : "suggest_search_analyzer"
+			}
+		}
 	  },
       "san_bun" : {
         "type" : "text",
