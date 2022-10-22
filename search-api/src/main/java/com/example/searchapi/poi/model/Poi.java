@@ -39,6 +39,12 @@ public class Poi {
 
     private int zip_code;
 
+    private String large_category;
+
+    private String medium_category;
+
+    private String small_category;
+
     @Embedded
     private Location location;
 
