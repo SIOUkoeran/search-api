@@ -85,4 +85,27 @@ class PoiQueryRepositoryImplTest extends BaseTest {
 
         Assertions.assertThat(pois.isEmpty()).isTrue();
     }
+
+    @ParameterizedTest
+    @CsvSource({"오시오장,large_category,쇼핑,오시오", "김밥천국,large_category,식사,김밥천국", "김밥연국,large_category,식사,김밥천국"})
+    @DisplayName("poi 필터 보정 테스트")
+    void testPoiNameSearchWithLargeCategoryFilterAndFuzzy(
+            String fname,
+            String categoryField,
+            String category,
+            String expectedFname
+    ) {
+        List<Poi> pois
+                = this.poiQueryRepository.searchPoiByNameFilterPoiCodes(fname, categoryField, category, PageRequest.of(0, 10));
+
+        pois.forEach(
+                poi -> log.info("poi {}", poi.getFname())
+        );
+        pois.forEach(
+                poi -> {
+                    Assertions.assertThat(poi.getFname()).contains(expectedFname);
+                    Assertions.assertThat(poi.getLarge_category()).isEqualTo(category);
+                }
+        );
+    }
 }
