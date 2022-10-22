@@ -30,8 +30,7 @@ public class PoiControllerV2 {
             return ResponseEntity.status(200)
                     .body(new SearchPoi.Response(this.poiService.searchQueryByName(name, PageRequest.of(page, 20))));
 
-        List<String> poiCodes = this.categoryService.searchPoiCodesByCategoryField(category, field);
         return ResponseEntity.status(200)
-                .body(new SearchPoi.Response(this.poiService.searchPoiByNameFilterPoiCodes(name, poiCodes, PageRequest.of(page, 20))));
+                .body(new SearchPoi.Response(this.poiService.searchPoiByNameFilterPoiCodes(name, field, category, PageRequest.of(page, 20))));
     }
 }
