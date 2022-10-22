@@ -7,6 +7,8 @@ import com.example.searchapi.address.dto.SuggestAddressDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +36,49 @@ public class AddressSuggestServiceTest extends BaseTest {
         Assertions.assertThat(response.getAddress().size()).isEqualTo(5);
     }
 
-    @Test
+    @ParameterizedTest
+    @CsvSource({"중랑구, 서울특별시 중랑구 묵동 385-0,1", "관악구, 서울특별시 관악구 신림동,5","서울, 서울특별시, 5"})
     @DisplayName("중랑구 자동완성 검색 기대값 = 1")
-    void testSuggestAddress2() {
-        String address = "중랑구";
-        SuggestAddressDto.Request req= new SuggestAddressDto.Request(address);
+    void testSuggestAddress2(
+            String input,
+            String expectedResult,
+            int expectedSize
+    ) {
+        SuggestAddressDto.Request req= new SuggestAddressDto.Request(input);
         SuggestAddressDto.Response response = addressSuggestService.suggestAddress(req);
-        Assertions.assertThat(response.getAddress().size()).isEqualTo(1);
-        Assertions.assertThat(response.getAddress().get(0)).isEqualTo("서울특별시 중랑구 목동 385-0");
+        Assertions.assertThat(response.getAddress().size()).isEqualTo(expectedSize);
+        response.getAddress()
+                .forEach(
+                        a -> {
+                            Assertions.assertThat(a).startsWith(expectedResult);
+                            log.info("address {} ", a);
+                        }
+                );
     }
+
+    @ParameterizedTest
+    @CsvSource({"중ㄹ,서울특별시 중랑구 묵동,1"})
+    @DisplayName("자음 모음 분리되어 입력되는지 확인")
+    void testJasoFilterSuggest(
+            String input,
+            String expectedResult,
+            int expectedSize
+    ) {
+        SuggestAddressDto.Request req= new SuggestAddressDto.Request(input);
+        SuggestAddressDto.Response response = addressSuggestService.suggestAddress(req);
+        Assertions.assertThat(response.getAddress().size()).isEqualTo(expectedSize);
+        response.getAddress()
+                .forEach(
+                        a -> Assertions.assertThat(a).startsWith(expectedResult)
+                );
+    }
+//
+//    @ParameterizedTest
+//    @CsvSource({"중ㄹ, 서울특별시 중랑구 "})
+//    @DisplayName("자동완성 테스트")
+//    void testSuggestAddressParameter(
+//            String address,
+//            String expectedResult
+//    )
 
 }
