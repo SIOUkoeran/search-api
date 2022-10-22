@@ -32,16 +32,17 @@ public class AddressSuggestQueryRepositoryImpl implements AddressSuggestQueryRep
 
     @Override
     public Suggest.Suggestion<? extends Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option>> suggestAddressByAddress(String address) {
-        CompletionSuggestionBuilder completionQuery = querySuggestUtils.createCompletionQuery(address, 5, "address_suggest");
+        CompletionSuggestionBuilder completionQuery = querySuggestUtils.createCompletionQuery(address, 5, "address_suggest.suggest");
         SuggestBuilder suggestQuery =querySuggestUtils.createSuggestBuilder(List.of("address-suggest"), completionQuery);
 
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withSuggestBuilder(suggestQuery)
                 .build()
                 ;
-
-        SearchHits<Address> address1 = operations.search(query, Address.class, IndexCoordinates.of("address"));
-        return address1.getSuggest().getSuggestion("address-suggest");
+        log.debug("request suggest query {}", query.toString());
+        SearchHits<Address> responseAddress = operations.search(query, Address.class, IndexCoordinates.of("address"));
+        log.debug("response suggest address {}", responseAddress.getSuggest());
+        return responseAddress.getSuggest().getSuggestion("address-suggest");
     }
 
     @Override

@@ -43,7 +43,7 @@ services:
 
   ### logstash
   logstash:
-    image: docker.elastic.co/logstash/logstash:7.15.1
+    image: docker.elastic.co/logstash/logstash:7.16.2
     container_name: test_logstash
     user: root
     ports:

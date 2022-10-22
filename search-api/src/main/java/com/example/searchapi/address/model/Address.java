@@ -32,8 +32,7 @@ public class Address {
     private int     primary_bun;
     private int     secondary_bun;
 
-    @CompletionField()
-    private Completion address_suggest;
+    private List<String> address_suggest;
 
     @Override
     public String toString() {
@@ -54,7 +53,6 @@ public class Address {
         this.primary_bun = request.getPrimaryBun();
         this.secondary_bun = request.getSecondaryBun();
         this.poi_id = poiId;
-        this.address_suggest = new Completion(addressSuggest);
     }
 
     public Address update(UpdateAddress.Request request, String[] addressSuggest) {
@@ -63,7 +61,6 @@ public class Address {
         this.san_bun = request.getSanBun();
         this.primary_bun = request.getPrimaryBun();
         this.secondary_bun = request.getSecondaryBun();
-        this.address_suggest = new Completion(addressSuggest);
         return this;
     }
 
@@ -74,6 +71,5 @@ public class Address {
         this.primary_bun = request.getPrimaryBun();
         this.secondary_bun = request.getSecondaryBun();
         this.poi_id = poiId;
-        this.address_suggest = new Completion(addressSuggest);
     }
 }
