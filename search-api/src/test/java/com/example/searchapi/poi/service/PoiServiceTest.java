@@ -119,13 +119,15 @@ class PoiServiceTest extends BaseTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"오시오", "오시호", "오시오장"})
+    @CsvSource({"오시오,식사,large_category", "오시호,식사,large_category", "오시오장,식사,large_category"})
     @DisplayName("poi 명칭 필터 검색 서비스 로직 테스트")
     void testFilterSearchPoiName(
-            String fname
+            String fname,
+            String category,
+            String field
     ) {
         List<Poi> pois
-                = this.poiService.searchPoiByNameFilterPoiCodes(fname, List.of("0x2FFF"), PageRequest.of(0, 10));
+                = this.poiService.searchPoiByNameFilterPoiCodes(fname, field, category, PageRequest.of(0, 10));
         Assertions.assertThat(pois.size()).isEqualTo(5);
     }
 }

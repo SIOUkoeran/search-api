@@ -70,6 +70,13 @@ public class PoiQueryRepositoryImpl implements PoiQueryRepository {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * poi name 검색 시 필터 없이
+     *
+     * @param name
+     * @param pageRequest
+     * @return
+     */
     @Override
     public List<Poi> searchPoiByName(String name, PageRequest pageRequest) {
 
@@ -78,12 +85,14 @@ public class PoiQueryRepositoryImpl implements PoiQueryRepository {
                         .should(queryStringQuery(name)
                                 .field("fname.keyword", 2f)
                                 .field("cname.keyword")
+                                .fuzzyTranspositions(false)
+                                .fuzziness(Fuzziness.ZERO)
+                                .boost(1.5f)
                         )
                         .should(multiMatchQuery(name)
                                 .field("fname", 1.5f)
                                 .field("cname")
                                 .type(BOOL_PREFIX)
-                                .prefixLength(2)
                         )
                         .should(multiMatchQuery(name)
                                 .field("fname", 1.5f)
@@ -94,9 +103,7 @@ public class PoiQueryRepositoryImpl implements PoiQueryRepository {
                                 .fuzziness(Fuzziness.AUTO)
                                 .boost(0.3f)
                                 .fuzzyTranspositions(false)
-
                         )
-
                 )
                 .withPageable(pageRequest)
                 .build();
@@ -105,20 +112,43 @@ public class PoiQueryRepositoryImpl implements PoiQueryRepository {
                 .map(SearchHit::getContent)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * poi 검색 시 filter 쿼리
+     * @param name
+     * @param field
+     * @param category
+     * @param pageRequest
+     * @return
+     */
     @Override
-    public List<Poi> searchPoiByNameFilterPoiCodes(String name, List<String> poiCode, PageRequest pageRequest) {
+    public List<Poi> searchPoiByNameFilterPoiCodes(String name, String field, String category, PageRequest pageRequest) {
         NativeSearchQuery query = new NativeSearchQueryBuilder()
                 .withQuery(boolQuery()
-                        .must(multiMatchQuery(name)
-                                .field("cname")
-                                .field("fname", 1.5f)
-                                .field("fname.edge")
-                                .fuzziness(Fuzziness.TWO)
+                        .should(queryStringQuery(name)
+                                .field("fname.keyword", 2f)
+                                .field("cname.keyword")
+                                .fuzzyTranspositions(false)
+                                .fuzziness(Fuzziness.ZERO)
+                                .boost(1.5f)
                         )
-                        .filter(
-                                termsQuery("poi_code", poiCode)
+                        .should(multiMatchQuery(name)
+                                .field("fname", 1.5f)
+                                .field("cname")
+                                .type(BOOL_PREFIX)
+                        )
+                        .should(multiMatchQuery(name)
+                                .field("fname", 1.5f)
+                                .field("cname")
+                                .field("fname._2gram")
+                                .field("fname._3gram")
+                                .type(BEST_FIELDS)
+                                .fuzziness(Fuzziness.AUTO)
+                                .boost(0.3f)
+                                .fuzzyTranspositions(false)
                         )
                 )
+                .withFilter(termsQuery(field, category))
                 .withPageable(pageRequest)
                 .build();
         return operations.search(query, Poi.class, IndexCoordinates.of("poi"))

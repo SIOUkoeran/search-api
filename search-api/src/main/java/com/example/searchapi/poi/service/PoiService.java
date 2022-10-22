@@ -83,7 +83,7 @@ public class PoiService {
     }
 
     @Transactional(readOnly = true)
-    public List<Poi> searchPoiByNameFilterPoiCodes(String name, List<String> poiCodes, PageRequest of) {
-        return this.poiQueryRepository.searchPoiByNameFilterPoiCodes(name, poiCodes, of);
+    public List<Poi> searchPoiByNameFilterPoiCodes(String name, String field, String category, PageRequest of) {
+        return this.poiQueryRepository.searchPoiByNameFilterPoiCodes(name, field, category, of);
     }
 }
