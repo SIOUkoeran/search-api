@@ -13,7 +13,7 @@ public class SuggestAddressDto {
         private final String address;
 
         public Request(String address) {
-            this.address = address;
+            this.address = address.replaceAll(" ","");
         }
     }
 
