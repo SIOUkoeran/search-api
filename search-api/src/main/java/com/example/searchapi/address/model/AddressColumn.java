@@ -8,11 +8,10 @@ public enum AddressColumn {
     ADDRESS("address", 0),
     PRIMARYBUN("primary_bun", 1),
     SECONDATYBUN("secondary_bun", 2),
-    SANBUN("san_bun", 3)
-    ;
+    SANBUN("san_bun", 3);
 
     private final String column;
-    private final int    idx;
+    private final int idx;
 
     AddressColumn(String column, int idx) {
         this.column = column;

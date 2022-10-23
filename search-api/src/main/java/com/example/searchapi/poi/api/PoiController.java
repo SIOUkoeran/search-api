@@ -22,30 +22,34 @@ public class PoiController {
     private final CategoryService categoryService;
     private final AddressService addressService;
 
-    public PoiController(PoiService poiService, CategoryService categoryService, AddressService addressService) {
+    public PoiController(PoiService poiService, CategoryService categoryService,
+        AddressService addressService) {
         this.poiService = poiService;
         this.categoryService = categoryService;
         this.addressService = addressService;
     }
 
-    @GetMapping(value ="", params = {"address", "page"})
+    @GetMapping(value = "", params = {"address", "page"})
     public List<Poi> searchAllPoiByAddress(@RequestParam("address") String address,
-                                           @RequestParam("page") int page){
-        List<String> poi_ids = this.addressService.searchPoiIdByAddress(address, PageRequest.of(page, 20));
+        @RequestParam("page") int page) {
+        List<String> poi_ids = this.addressService.searchPoiIdByAddress(address,
+            PageRequest.of(page, 20));
         return this.poiService.searchQueryByPoiCodes(poi_ids, PageRequest.of(page, 20));
     }
 
-    @GetMapping(value ="", params = {"name"})
+    @GetMapping(value = "", params = {"name"})
     public List<Poi> searchAllPoiByName(@RequestParam("name") String name,
-                                        @RequestParam("page") int page) {
+        @RequestParam("page") int page) {
         return this.poiService.searchQueryByName(name, PageRequest.of(page, 20));
     }
 
-    @PostMapping(value ="")
-    public ResponseEntity<CreatePoi.Response> createPoi(@Valid @RequestBody CreatePoi.Request request) {
+    @PostMapping(value = "")
+    public ResponseEntity<CreatePoi.Response> createPoi(
+        @Valid @RequestBody CreatePoi.Request request) {
         Poi poi = this.poiService.createPoi(request);
         CreatePoi.Response response = new CreatePoi.Response(poi,
-                this.addressService.createAddress(new CreateAddressDto.Request(request), poi.getPoi_id()));
+            this.addressService.createAddress(new CreateAddressDto.Request(request),
+                poi.getPoi_id()));
         return ResponseEntity.status(201).body(response);
     }
 
@@ -56,9 +60,9 @@ public class PoiController {
         return ResponseEntity.status(204).body("DELETE SUCCESS");
     }
 
-    @PutMapping(value ="", params = {"id"})
+    @PutMapping(value = "", params = {"id"})
     public ResponseEntity<UpdatePoi.Response> updatePoi(@RequestParam("id") String id,
-                                                        @Valid @RequestBody UpdatePoi.Request request) {
+        @Valid @RequestBody UpdatePoi.Request request) {
         UpdatePoi.Response response = this.poiService.updatePoi(id, request);
 
         return ResponseEntity.status(201).body(response);

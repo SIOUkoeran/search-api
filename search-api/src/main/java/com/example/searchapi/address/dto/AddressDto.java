@@ -14,7 +14,7 @@ public class AddressDto {
 
     @NoArgsConstructor
     @Getter
-    public static class RequestCreate{
+    public static class RequestCreate {
 
         @JsonProperty("poi_code")
         @NotBlank(message = "poi_code 입력값이 비어있습니다.")
@@ -34,7 +34,8 @@ public class AddressDto {
         @JsonProperty("san_bun")
         private int sanBun;
 
-        public RequestCreate(String poiCode, String address, int primaryBun, int secondaryBun, int sanBun) {
+        public RequestCreate(String poiCode, String address, int primaryBun, int secondaryBun,
+            int sanBun) {
             this.poiCode = poiCode;
             this.address = address;
             this.primaryBun = primaryBun;
@@ -42,7 +43,7 @@ public class AddressDto {
             this.sanBun = sanBun;
         }
 
-        public RequestCreate(CreatePoi.Request request){
+        public RequestCreate(CreatePoi.Request request) {
             this.poiCode = request.getPoiCode();
             this.address = request.getAddress();
             this.primaryBun = request.getPrimaryBun();
@@ -53,7 +54,7 @@ public class AddressDto {
 
     @NoArgsConstructor
     @Getter
-    public static class ResponseCreate{
+    public static class ResponseCreate {
 
         @JsonProperty("poi_id")
         private String poiId;

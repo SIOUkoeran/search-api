@@ -14,7 +14,8 @@ public class CreatePoi {
 
     @NoArgsConstructor
     @Getter
-    public static class Request{
+    public static class Request {
+
         @JsonProperty("poi_code")
         @NotBlank(message = "poi_code 입력값이 비어있습니다.")
         private String poiCode;
@@ -57,7 +58,8 @@ public class CreatePoi {
         private float lan;
 
         public Request(String poiCode, String address, int primaryBun, int secondaryBun, int sanBun,
-                       String fname, String cname, int phoneA, int phoneB, int phoneC, int zipCode, float lon, float lan) {
+            String fname, String cname, int phoneA, int phoneB, int phoneC, int zipCode, float lon,
+            float lan) {
             this.poiCode = poiCode;
             this.address = address;
             this.primaryBun = primaryBun;
@@ -76,26 +78,27 @@ public class CreatePoi {
         @Override
         public String toString() {
             return "Request{" +
-                    "poiCode='" + poiCode + '\'' +
-                    ", address='" + address + '\'' +
-                    ", primaryBun=" + primaryBun +
-                    ", secondaryBun=" + secondaryBun +
-                    ", sanBun=" + sanBun +
-                    ", fname='" + fname + '\'' +
-                    ", cname='" + cname + '\'' +
-                    ", phoneA=" + phoneA +
-                    ", phoneB=" + phoneB +
-                    ", phoneC=" + phoneC +
-                    ", zipCode=" + zipCode +
-                    ", lon=" + lon +
-                    ", lan=" + lan +
-                    '}';
+                "poiCode='" + poiCode + '\'' +
+                ", address='" + address + '\'' +
+                ", primaryBun=" + primaryBun +
+                ", secondaryBun=" + secondaryBun +
+                ", sanBun=" + sanBun +
+                ", fname='" + fname + '\'' +
+                ", cname='" + cname + '\'' +
+                ", phoneA=" + phoneA +
+                ", phoneB=" + phoneB +
+                ", phoneC=" + phoneC +
+                ", zipCode=" + zipCode +
+                ", lon=" + lon +
+                ", lan=" + lan +
+                '}';
         }
     }
 
     @NoArgsConstructor
     @Getter
-    public static class Response{
+    public static class Response {
+
         private Poi poi;
         private CreateAddressDto.Response address;
 

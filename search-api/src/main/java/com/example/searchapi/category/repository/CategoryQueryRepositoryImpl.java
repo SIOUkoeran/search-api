@@ -27,48 +27,50 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
         this.operations = operations;
     }
 
-    public Category searchPoiByPoiCode(String poiCode){
+    public Category searchPoiByPoiCode(String poiCode) {
         NativeSearchQuery searchPoiQuery = new NativeSearchQueryBuilder()
-                .withQuery(matchQuery("poi_code", poiCode))
-                .build();
+            .withQuery(matchQuery("poi_code", poiCode))
+            .build();
         return operations.search(searchPoiQuery, Category.class, IndexCoordinates.of("poi"))
-                .stream()
-                .map(SearchHit::getContent)
-                .findFirst()
-                .orElseThrow(NotFoundPoiException::new);
+            .stream()
+            .map(SearchHit::getContent)
+            .findFirst()
+            .orElseThrow(NotFoundPoiException::new);
     }
 
     @Override
     public List<Category> searchPoiByCategory(String category, String field) {
         NativeSearchQuery query = new NativeSearchQueryBuilder()
-                .withQuery(termQuery(field, category))
-                .withSorts(SortBuilders.scoreSort().order(SortOrder.DESC))
-                .build();
+            .withQuery(termQuery(field, category))
+            .withSorts(SortBuilders.scoreSort().order(SortOrder.DESC))
+            .build();
         return QueryUtils.operationQueryReturnList(query, Category.class, "category", operations);
     }
 
     @Override
     public List<Category> searchPoiBySmallCategory(String smallCategory) {
         NativeSearchQuery query = new NativeSearchQueryBuilder()
-                .withQuery(termQuery("small_category", smallCategory))
-                .withSorts(SortBuilders.scoreSort())
-                .build();
-        return QueryUtils.operationQueryReturnList(query, Category.class,"category", operations);
+            .withQuery(termQuery("small_category", smallCategory))
+            .withSorts(SortBuilders.scoreSort())
+            .build();
+        return QueryUtils.operationQueryReturnList(query, Category.class, "category", operations);
     }
 
     @Override
     public List<Category> searchPoiByLargeCategory(String category) {
         NativeSearchQuery searchPoiQuery = new NativeSearchQueryBuilder()
-                .withQuery(termQuery("large_category", category))
-                .build();
-        return QueryUtils.operationQueryReturnList(searchPoiQuery, Category.class, "poi", operations);
+            .withQuery(termQuery("large_category", category))
+            .build();
+        return QueryUtils.operationQueryReturnList(searchPoiQuery, Category.class, "poi",
+            operations);
     }
 
     @Override
     public List<Category> searchCategoryCodeByField(String category, String field) {
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
-                .withQuery(termQuery(field, category))
-                .build();
-        return QueryUtils.operationQueryReturnList(searchQuery, Category.class, "category", operations);
+            .withQuery(termQuery(field, category))
+            .build();
+        return QueryUtils.operationQueryReturnList(searchQuery, Category.class, "category",
+            operations);
     }
 }

@@ -12,7 +12,7 @@ public class UpdatePoi {
 
     @NoArgsConstructor
     @Getter
-    public static class Request{
+    public static class Request {
 
         @JsonProperty("poi_code")
         @NotBlank(message = "poi_code 입력값이 비어있습니다.")
@@ -42,7 +42,7 @@ public class UpdatePoi {
         private float lan;
 
         public Request(String poiCode, String fname, String cname,
-                       int phoneA, int phoneB, int phoneC, int zipCode, float lon, float lan) {
+            int phoneA, int phoneB, int phoneC, int zipCode, float lon, float lan) {
             this.poiCode = poiCode;
             this.fname = fname;
             this.cname = cname;
@@ -58,6 +58,7 @@ public class UpdatePoi {
     @NoArgsConstructor
     @Getter
     public static class Response {
+
         private Poi poi;
 
         public Response(Poi poi) {

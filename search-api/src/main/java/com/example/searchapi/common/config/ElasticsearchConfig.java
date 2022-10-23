@@ -9,10 +9,10 @@ import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = {"com.example.searchapi.poi.repository", "com.example.searchapi.category.repository", "com.example.searchapi.address.repository"})
+@EnableElasticsearchRepositories(basePackages = {"com.example.searchapi.poi.repository",
+    "com.example.searchapi.category.repository", "com.example.searchapi.address.repository"})
 @Slf4j
-public class ElasticsearchConfig extends AbstractElasticsearchConfiguration{
-
+public class ElasticsearchConfig extends AbstractElasticsearchConfiguration {
 
 
     @Value("${esHost}")
@@ -23,9 +23,9 @@ public class ElasticsearchConfig extends AbstractElasticsearchConfiguration{
     public RestHighLevelClient elasticsearchClient() {
 
         ClientConfiguration clientConfiguration =
-                ClientConfiguration.builder()
-                        .connectedTo(esHosts)
-                        .build();
+            ClientConfiguration.builder()
+                .connectedTo(esHosts)
+                .build();
         return RestClients.create(clientConfiguration).rest();
     }
 }

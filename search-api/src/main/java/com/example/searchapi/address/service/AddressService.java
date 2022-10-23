@@ -29,7 +29,8 @@ public class AddressService {
     private final QueryUtils queryUtils;
     private final AddressRepository addressRepository;
 
-    public AddressService(AddressQueryRepository addressQueryRepository, QueryUtils queryUtils, AddressRepository addressRepository) {
+    public AddressService(AddressQueryRepository addressQueryRepository, QueryUtils queryUtils,
+        AddressRepository addressRepository) {
         this.addressQueryRepository = addressQueryRepository;
         this.queryUtils = queryUtils;
         this.addressRepository = addressRepository;
@@ -38,14 +39,14 @@ public class AddressService {
     @Transactional(readOnly = true)
     public List<String> searchPoiIdByAddress(String address, PageRequest pageRequest) {
 
-        String reverseAddress  = queryUtils.splitQueryReturnReverse(address);
+        String reverseAddress = queryUtils.splitQueryReturnReverse(address);
         String[] bun = queryUtils.splitQueryUntilChar(address, '-');
 
         return this.addressQueryRepository.findAddressesByAddress(address,
-                        reverseAddress, bun, pageRequest)
-                .stream()
-                .map(Address::getPoi_id)
-                .collect(Collectors.toList());
+                reverseAddress, bun, pageRequest)
+            .stream()
+            .map(Address::getPoi_id)
+            .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -53,7 +54,8 @@ public class AddressService {
 
         String reverseAddress = queryUtils.splitQueryReturnReverse(address);
         String[] bun = queryUtils.splitQueryUntilChar(address, '-');
-        return this.addressQueryRepository.findAddressesByAddress(address, reverseAddress , bun, pageRequest);
+        return this.addressQueryRepository.findAddressesByAddress(address, reverseAddress, bun,
+            pageRequest);
     }
 
     @Transactional(readOnly = true)
@@ -62,21 +64,26 @@ public class AddressService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Address> searchFirstAllAddressByPoiCodes(List<String> poiCodes, int page, int size) {
-        List<Address> addresses = this.addressQueryRepository.findFirstQueryAllAddressByPoiCodes(poiCodes);
+    public Page<Address> searchFirstAllAddressByPoiCodes(List<String> poiCodes, int page,
+        int size) {
+        List<Address> addresses = this.addressQueryRepository.findFirstQueryAllAddressByPoiCodes(
+            poiCodes);
         log.info("search result size : {}", addresses.size());
         return QueryPageUtils.convertListToPage(addresses, page, size);
     }
 
     @Transactional(readOnly = true)
-    public Page<Address> searchNextAllAddressByPoiCodes(List<String> poiCodes, int page, int size, List<Object> searchAfter) {
-        List<Address> addresses = this.addressQueryRepository.findNextQueryAllAddressByPoiCodes(poiCodes, searchAfter);
+    public Page<Address> searchNextAllAddressByPoiCodes(List<String> poiCodes, int page, int size,
+        List<Object> searchAfter) {
+        List<Address> addresses = this.addressQueryRepository.findNextQueryAllAddressByPoiCodes(
+            poiCodes, searchAfter);
         return QueryPageUtils.convertListToPage(addresses, page, size);
     }
 
     public CreateAddressDto.Response createAddress(CreateAddressDto.Request request, String poiId) {
 
-        String[] address = splitAddress(request.getAddress(), request.getPrimaryBun(), request.getSecondaryBun());
+        String[] address = splitAddress(request.getAddress(), request.getPrimaryBun(),
+            request.getSecondaryBun());
         Address savedAddress = this.addressRepository.save(new Address(request, address, poiId));
         log.info("{}", savedAddress);
         return new CreateAddressDto.Response(savedAddress);
@@ -85,12 +92,9 @@ public class AddressService {
     public void deleteAddress(String poiId) {
         this.addressRepository.deleteById(poiId);
     }
+
     /**
-     * 서울특별시 관악구 신림동
-     * 관악구 신림동 610-50
-     * 관악구 신림동 610-50
-     * 신림동 610-50
-     * 610-50
+     * 서울특별시 관악구 신림동 관악구 신림동 610-50 관악구 신림동 610-50 신림동 610-50 610-50
      */
     private String[] splitAddress(String addressString, int primaryBun, int secondaryBun) {
         String[] input = new String[4];
@@ -100,8 +104,8 @@ public class AddressService {
             input[i] = address[i];
         }
         input[3] = String.valueOf(primaryBun)
-                + '-'
-                + String.valueOf(secondaryBun);
+            + '-'
+            + String.valueOf(secondaryBun);
 
         String[] result = new String[4];
         StringBuilder sb = new StringBuilder();
@@ -118,9 +122,10 @@ public class AddressService {
     public UpdateAddress.Response updateAddress(String id, UpdateAddress.Request request) {
 
         Address findAddress = this.addressRepository.findById(id)
-                .orElseThrow(NotFoundAddressException::new);
+            .orElseThrow(NotFoundAddressException::new);
         String[] input
-                = splitAddress(request.getAddress(), request.getPrimaryBun(), request.getSecondaryBun());
+            = splitAddress(request.getAddress(), request.getPrimaryBun(),
+            request.getSecondaryBun());
         Address update = findAddress.update(request, input);
         return new UpdateAddress.Response(this.addressRepository.save(update));
     }

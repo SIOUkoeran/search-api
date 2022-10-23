@@ -7,9 +7,14 @@ import java.util.List;
 
 @Repository
 public interface CategoryQueryRepository {
+
     Category searchPoiByPoiCode(String poiCode);
+
     List<Category> searchPoiByLargeCategory(String category);
+
     List<Category> searchPoiByCategory(String category, String field);
+
     List<Category> searchPoiBySmallCategory(String smallCategory);
+
     List<Category> searchCategoryCodeByField(String category, String field);
 }

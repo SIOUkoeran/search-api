@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class CategoryExceptionHandler {
 
     @ExceptionHandler(NotFoundPoiException.class)
-    protected ResponseEntity<?> notFoundPoiExceptionHandler(NotFoundPoiException e){
+    protected ResponseEntity<?> notFoundPoiExceptionHandler(NotFoundPoiException e) {
         log.error("not found poi entity", e);
         return ErrorResponse.toResponseEntity(e.getErrorCode());
     }

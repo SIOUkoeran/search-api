@@ -32,7 +32,8 @@ public class UpdateAddress {
         @JsonProperty("san_bun")
         private int sanBun;
 
-        public Request(String poiCode, String address, int primaryBun, int secondaryBun, int sanBun) {
+        public Request(String poiCode, String address, int primaryBun, int secondaryBun,
+            int sanBun) {
             this.poiCode = poiCode;
             this.address = address;
             this.primaryBun = primaryBun;
@@ -44,6 +45,7 @@ public class UpdateAddress {
     @NoArgsConstructor
     @Getter
     public static class Response {
+
         private Address address;
 
         public Response(Address address) {

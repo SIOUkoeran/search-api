@@ -23,14 +23,18 @@ public class PoiControllerV2 {
 
     @GetMapping(params = {"name", "category", "page", "field"})
     public ResponseEntity<SearchPoi.Response> searchPoiWithFilter(@RequestParam("name") String name,
-                                                                  @RequestParam(value = "category", required = false) String category,
-                                                                  @RequestParam(value = "field", required = false) String field,
-                                                                  @RequestParam("page") int page) {
-        if (category.isEmpty() || field.isEmpty())
+        @RequestParam(value = "category", required = false) String category,
+        @RequestParam(value = "field", required = false) String field,
+        @RequestParam("page") int page) {
+        if (category.isEmpty() || field.isEmpty()) {
             return ResponseEntity.status(200)
-                    .body(new SearchPoi.Response(this.poiService.searchQueryByName(name, PageRequest.of(page, 20))));
+                .body(new SearchPoi.Response(
+                    this.poiService.searchQueryByName(name, PageRequest.of(page, 20))));
+        }
 
         return ResponseEntity.status(200)
-                .body(new SearchPoi.Response(this.poiService.searchPoiByNameFilterPoiCodes(name, field, category, PageRequest.of(page, 20))));
+            .body(new SearchPoi.Response(
+                this.poiService.searchPoiByNameFilterPoiCodes(name, field, category,
+                    PageRequest.of(page, 20))));
     }
 }

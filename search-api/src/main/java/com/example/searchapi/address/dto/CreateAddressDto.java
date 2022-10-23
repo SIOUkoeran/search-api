@@ -32,7 +32,8 @@ public class CreateAddressDto {
         @JsonProperty("san_bun")
         private int sanBun;
 
-        public Request(String poiCode, String address, int primaryBun, int secondaryBun, int sanBun) {
+        public Request(String poiCode, String address, int primaryBun, int secondaryBun,
+            int sanBun) {
             this.poiCode = poiCode;
             this.address = address;
             this.primaryBun = primaryBun;
@@ -40,7 +41,7 @@ public class CreateAddressDto {
             this.sanBun = sanBun;
         }
 
-        public Request(CreatePoi.Request request){
+        public Request(CreatePoi.Request request) {
             this.poiCode = request.getPoiCode();
             this.address = request.getAddress();
             this.primaryBun = request.getPrimaryBun();

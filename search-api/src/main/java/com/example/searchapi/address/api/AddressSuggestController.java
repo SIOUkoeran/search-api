@@ -18,13 +18,15 @@ public class AddressSuggestController {
     private final AddressService addressService;
     private final AddressSuggestService addressSuggestService;
 
-    public AddressSuggestController(AddressService addressService, AddressSuggestService addressSuggestService) {
+    public AddressSuggestController(AddressService addressService,
+        AddressSuggestService addressSuggestService) {
         this.addressService = addressService;
         this.addressSuggestService = addressSuggestService;
     }
 
     @GetMapping(value = "")
-    public ResponseEntity<SuggestAddressDto.Response> suggestAddressByAddress(@RequestBody SuggestAddressDto.Request request) {
+    public ResponseEntity<SuggestAddressDto.Response> suggestAddressByAddress(
+        @RequestBody SuggestAddressDto.Request request) {
         return ResponseEntity.ok().body(this.addressSuggestService.suggestAddress(request));
     }
 }

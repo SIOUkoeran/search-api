@@ -61,85 +61,85 @@ class PoiControllerTest extends BaseTest {
     Logger log = LoggerFactory.getLogger(PoiControllerTest.class);
 
     @AfterEach
-    void afterEach(){
+    void afterEach() {
         mustDeletePoiId
-                .forEach(poiId -> {
-                    poiRepository.deleteById(poiId);
-                    addressRepository.deleteById(poiId);
-                });
+            .forEach(poiId -> {
+                poiRepository.deleteById(poiId);
+                addressRepository.deleteById(poiId);
+            });
     }
 
     @ParameterizedTest
-    @CsvSource({"address,서울특별시 관악구 신림동,0XFFFF,808,400,김밥천국,성안점,010,9534,4150,127.1313131,37.46961667,13123"})
+    @CsvSource({
+        "address,서울특별시 관악구 신림동,0XFFFF,808,400,김밥천국,성안점,010,9534,4150,127.1313131,37.46961667,13123"})
     @DisplayName("poi create api 테스트")
     void testPoiCreateApi(String name,
-                          String address,
-                          String poiCode,
-                          int primary,
-                          int secondary,
-                          String fname,
-                          String cname,
-                          int phoneA,
-                          int phoneB,
-                          int phoneC,
-                          float lon,
-                          float lan,
-                          int zipCode) throws Exception {
-        CreatePoi.Request request = new CreatePoi.Request(poiCode,address, primary, secondary, -1
-                , fname, cname, phoneA, phoneB, phoneC, zipCode, lon, lan);
+        String address,
+        String poiCode,
+        int primary,
+        int secondary,
+        String fname,
+        String cname,
+        int phoneA,
+        int phoneB,
+        int phoneC,
+        float lon,
+        float lan,
+        int zipCode) throws Exception {
+        CreatePoi.Request request = new CreatePoi.Request(poiCode, address, primary, secondary, -1
+            , fname, cname, phoneA, phoneB, phoneC, zipCode, lon, lan);
         log.info("request {}", request.toString());
         MvcResult result = mockMvc.perform(post("/api/poi")
-                        .content(objectMapper.writeValueAsString(request))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("poi").exists())
-                .andExpect(jsonPath("poi.poi_id").exists())
-                .andExpect(jsonPath("poi.poi_code").exists())
-                .andReturn()
-        ;
+                .content(objectMapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("poi").exists())
+            .andExpect(jsonPath("poi.poi_id").exists())
+            .andExpect(jsonPath("poi.poi_code").exists())
+            .andReturn();
         String poiId
-                = JsonPath.read(result.getResponse().getContentAsString(), "poi.poi_id");
-
+            = JsonPath.read(result.getResponse().getContentAsString(), "poi.poi_id");
 
         mustDeletePoiId.add(poiId);
     }
 
     @ParameterizedTest
-    @CsvSource({"address,서울특별시 관악구 신림동,0XFFFF,808,400,김밥천국,성안점,010,9534,4150,127.1313131,37.46961667,13123,김밥지옥"})
+    @CsvSource({
+        "address,서울특별시 관악구 신림동,0XFFFF,808,400,김밥천국,성안점,010,9534,4150,127.1313131,37.46961667,13123,김밥지옥"})
     @DisplayName("poi update api 테스트")
     void testPoiCreateApi(String name,
-                          String address,
-                          String poiCode,
-                          int primary,
-                          int secondary,
-                          String fname,
-                          String cname,
-                          int phoneA,
-                          int phoneB,
-                          int phoneC,
-                          float lon,
-                          float lan,
-                          int zipCode,
-                          String changeFname) throws Exception {
+        String address,
+        String poiCode,
+        int primary,
+        int secondary,
+        String fname,
+        String cname,
+        int phoneA,
+        int phoneB,
+        int phoneC,
+        float lon,
+        float lan,
+        int zipCode,
+        String changeFname) throws Exception {
 
-        CreatePoi.Request request = new CreatePoi.Request(poiCode,address, primary, secondary, -1
-                , fname, cname, phoneA, phoneB, phoneC, zipCode, lon, lan);
+        CreatePoi.Request request = new CreatePoi.Request(poiCode, address, primary, secondary, -1
+            , fname, cname, phoneA, phoneB, phoneC, zipCode, lon, lan);
 
         Poi poi = poiService.createPoi(request);
 
         UpdatePoi.Request updateRequest = new UpdatePoi.Request(poiCode, changeFname, cname,
-                phoneA, phoneB, phoneC, zipCode, lon, lan);
+            phoneA, phoneB, phoneC, zipCode, lon, lan);
         MvcResult result = mockMvc.perform(put("/api/poi/")
-                        .param("id", poi.getPoi_id())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateRequest))
-                )
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andReturn();
+                .param("id", poi.getPoi_id())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateRequest))
+            )
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andReturn();
 
         String resultId = JsonPath.read(result.getResponse().getContentAsString(), "poi.poi_id");
         mustDeletePoiId.add(poi.getPoi_id());

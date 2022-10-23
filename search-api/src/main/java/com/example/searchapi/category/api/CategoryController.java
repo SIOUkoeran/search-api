@@ -18,7 +18,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{poi}")
-    public Category findByPoi(@RequestParam("poi") String poi){
+    public Category findByPoi(@RequestParam("poi") String poi) {
         return this.categoryService.searchPoiByPoiCode(poi);
     }
 }

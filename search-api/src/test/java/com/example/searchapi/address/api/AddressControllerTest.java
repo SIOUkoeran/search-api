@@ -57,46 +57,49 @@ public class AddressControllerTest extends BaseTest {
 
     ObjectMapper objectMapper = new ObjectMapper();
     private static final List<String> mustDeletePoiId = new LinkedList<>();
+
     @AfterEach
     void afterEach() {
-            mustDeletePoiId
-                    .forEach(poiId -> {
-                        this.addressRepository.deleteById(poiId);
-                        this.poiRepository.deleteById(poiId);
-                    });
+        mustDeletePoiId
+            .forEach(poiId -> {
+                this.addressRepository.deleteById(poiId);
+                this.poiRepository.deleteById(poiId);
+            });
     }
 
     @ParameterizedTest
     @CsvSource({"address,서울특별시 관악구 신림동,0XFFFF,808,400,0,서울특별시 종로구 목동"})
     @DisplayName("address update api 테스트")
     void testUpdateAddress(String name,
-                           String address,
-                           String poiCode,
-                           int primary,
-                           int secondary,
-                           int sanbun,
-                           String changeAddress) throws Exception {
+        String address,
+        String poiCode,
+        int primary,
+        int secondary,
+        int sanbun,
+        String changeAddress) throws Exception {
 
-        CreateAddressDto.Request request = new CreateAddressDto.Request(poiCode, address, primary, secondary, sanbun);
+        CreateAddressDto.Request request = new CreateAddressDto.Request(poiCode, address, primary,
+            secondary, sanbun);
         CreateAddressDto.Response saveResponse = this.addressService.createAddress(request, "10");
 
-        UpdateAddress.Request updateRequest = new UpdateAddress.Request(poiCode, changeAddress, primary, secondary, sanbun);
-
+        UpdateAddress.Request updateRequest = new UpdateAddress.Request(poiCode, changeAddress,
+            primary, secondary, sanbun);
 
         mockMvc.perform(put("/api/address")
                 .param("id", "10")
                 .content(objectMapper.writeValueAsString(updateRequest))
                 .contentType(MediaType.APPLICATION_JSON)
-        )
-                .andDo(print())
-                .andExpect(status().is(204))
-                .andExpect(jsonPath("address").exists())
-                .andExpect(jsonPath("address.address_suggest").exists())
-                .andExpect(jsonPath("address.address_suggest.input").isArray())
+            )
+            .andDo(print())
+            .andExpect(status().is(204))
+            .andExpect(jsonPath("address").exists())
+            .andExpect(jsonPath("address.address_suggest").exists())
+            .andExpect(jsonPath("address.address_suggest.input").isArray())
 
         ;
         Assertions.assertThat(this.addressRepository.existsById("10")).isTrue();
-        Assertions.assertThat(this.addressRepository.findById("10").get().getAddress()).isEqualTo(changeAddress);
+        Assertions.assertThat(this.addressRepository.findById("10").get().getAddress())
+            .isEqualTo(changeAddress);
         mustDeletePoiId.add("10");
     }
 }
