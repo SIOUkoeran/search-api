@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class ResponseAddress {
 
     @Getter
-    public static class address{
+    public static class address {
 
         private String fname;
 

@@ -16,27 +16,28 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
-public class PoiSuggestQueryRepositoryImpl implements PoiSuggestQueryRepository{
+public class PoiSuggestQueryRepositoryImpl implements PoiSuggestQueryRepository {
 
     private final QuerySuggestUtils querySuggestUtils;
     private final ElasticsearchOperations operations;
 
-    public PoiSuggestQueryRepositoryImpl(QuerySuggestUtils querySuggestUtils, ElasticsearchOperations operations) {
+    public PoiSuggestQueryRepositoryImpl(QuerySuggestUtils querySuggestUtils,
+        ElasticsearchOperations operations) {
         this.querySuggestUtils = querySuggestUtils;
         this.operations = operations;
     }
 
     @Override
-    public Suggest.Suggestion<? extends Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option>> suggestPoiName(String input) {
+    public Suggest.Suggestion<? extends Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option>> suggestPoiName(
+        String input) {
         CompletionSuggestionBuilder completionQuery
-                = querySuggestUtils.createCompletionQuery(input, 5, "poi_suggest");
+            = querySuggestUtils.createCompletionQuery(input, 5, "poi_suggest");
         SuggestBuilder suggestQuery
-                = querySuggestUtils.createSuggestBuilder(List.of("poi-suggest"), completionQuery);
-
+            = querySuggestUtils.createSuggestBuilder(List.of("poi-suggest"), completionQuery);
 
         NativeSearchQuery query = new NativeSearchQueryBuilder()
-                .withSuggestBuilder(suggestQuery)
-                .build();
+            .withSuggestBuilder(suggestQuery)
+            .build();
 
         SearchHits<Poi> poi = operations.search(query, Poi.class, IndexCoordinates.of("poi"));
         return Objects.requireNonNull(poi.getSuggest()).getSuggestion("poi-suggest");

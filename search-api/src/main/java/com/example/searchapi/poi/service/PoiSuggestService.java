@@ -25,7 +25,8 @@ public class PoiSuggestService {
     private PoiSuggestQueryRepository poiSuggestQueryRepository;
     private QuerySuggestUtils querySuggestUtils;
 
-    public PoiSuggestService(PoiQueryRepository poiQueryRepository, PoiSuggestQueryRepository poiSuggestQueryRepository, QuerySuggestUtils querySuggestUtils) {
+    public PoiSuggestService(PoiQueryRepository poiQueryRepository,
+        PoiSuggestQueryRepository poiSuggestQueryRepository, QuerySuggestUtils querySuggestUtils) {
         this.poiQueryRepository = poiQueryRepository;
         this.poiSuggestQueryRepository = poiSuggestQueryRepository;
         this.querySuggestUtils = querySuggestUtils;
@@ -35,7 +36,8 @@ public class PoiSuggestService {
     public PoiSuggestDto.Response suggestPoi(PoiSuggestDto.Request request) {
 
         CompletionSuggestion completionSuggestion
-                = (CompletionSuggestion) this.poiSuggestQueryRepository.suggestPoiName(request.getPoi());
+            = (CompletionSuggestion) this.poiSuggestQueryRepository.suggestPoiName(
+            request.getPoi());
         List<String> strings = querySuggestUtils.convertToPoiNameList(completionSuggestion);
         return new PoiSuggestDto.Response(strings);
     }

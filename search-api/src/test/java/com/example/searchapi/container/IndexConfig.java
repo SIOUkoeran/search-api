@@ -42,13 +42,14 @@ public class IndexConfig {
         Settings settings = fromPathSetting("elasticsearch/" + indexName + "/settings.json");
         String mappings = readResourceFile("elasticsearch/" + indexName + "/mappings.json");
         address.settings(settings)
-                .mapping(mappings, XContentType.JSON);
+            .mapping(mappings, XContentType.JSON);
 
         ActionListener<CreateIndexResponse> listener = new ActionListener<CreateIndexResponse>() {
             @Override
             public void onResponse(CreateIndexResponse createIndexResponse) {
                 logger.info("create index : {} ", indexName);
             }
+
             @Override
             public void onFailure(Exception e) {
                 logger.error("failed to create index : {} ::: {}", indexName, e);
@@ -59,17 +60,17 @@ public class IndexConfig {
 
     public void insertData(String indexName) {
         List<JSONObject> jsonObjects = readJsonFile("elasticsearch/" + indexName + "/data.json");
-        
+
         jsonObjects
-                .forEach(jsonObject -> {
-                    IndexRequest indexRequest = new IndexRequest(indexName)
-                            .source(jsonObject.toString(), XContentType.JSON);
-                    try {
-                        client.index(indexRequest, RequestOptions.DEFAULT);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
+            .forEach(jsonObject -> {
+                IndexRequest indexRequest = new IndexRequest(indexName)
+                    .source(jsonObject.toString(), XContentType.JSON);
+                try {
+                    client.index(indexRequest, RequestOptions.DEFAULT);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
 
 
     }
@@ -89,6 +90,7 @@ public class IndexConfig {
         }
         return jsonObjects;
     }
+
     private ActionListener<CreateIndexResponse> createListener(String indexName) {
 
         return new ActionListener<CreateIndexResponse>() {
@@ -107,8 +109,8 @@ public class IndexConfig {
     private Settings fromPathSetting(String path) {
         String settings = readResourceFile(path);
         return Settings.builder()
-                .loadFromSource(settings, XContentType.JSON)
-                .build();
+            .loadFromSource(settings, XContentType.JSON)
+            .build();
     }
 
     private CompressedXContent fromPathMapping(String path) {
@@ -125,7 +127,7 @@ public class IndexConfig {
         ClassPathResource classPathResource = new ClassPathResource(path);
         String mappings = null;
         try {
-            mappings =  IOUtils.toString(classPathResource.getInputStream(), StandardCharsets.UTF_8);
+            mappings = IOUtils.toString(classPathResource.getInputStream(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("failed to read resource mapping json file");

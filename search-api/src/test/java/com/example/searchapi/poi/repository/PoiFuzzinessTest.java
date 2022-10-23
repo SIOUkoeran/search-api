@@ -25,10 +25,11 @@ public class PoiFuzzinessTest extends BaseTest {
     PoiQueryRepository poiQueryRepository;
 
     @ParameterizedTest
-    @CsvSource({"오시호,오시오상회", "김밥연국,김밥천국", "김밥연국 성화점,김밥천국", "오시오, 오시오상회", "오시오 상회,오시오상회", "오시오상회,오시오상김밥연국 "})
+    @CsvSource({"오시호,오시오상회", "김밥연국,김밥천국", "김밥연국 성화점,김밥천국", "오시오, 오시오상회", "오시오 상회,오시오상회",
+        "오시오상회,오시오상김밥연국 "})
     @DisplayName("오타보정테스트 fname 검증")
     void testFuzzyFnameTest(String input,
-                       String expectedResult) {
+        String expectedResult) {
 
         List<Poi> results = poiQueryRepository.searchPoiByName(input, PageRequest.of(0, 20));
         log.info("Result {}", results.get(0).getFname());
@@ -40,7 +41,7 @@ public class PoiFuzzinessTest extends BaseTest {
     @CsvSource({"김밥연국 성와점,성안점", "김밥연국 성화점,성화점", "맘김밥천국 성화점, 성간점"})
     @DisplayName("오타보정테스트 cnam 검증")
     void testFuzzyCnameTest(String input,
-                            String expectedResult) {
+        String expectedResult) {
         log.info("query input {}", input);
         List<Poi> results = poiQueryRepository.searchPoiByName(input, PageRequest.of(0, 20));
         Poi findPoi = results.get(0);

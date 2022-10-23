@@ -23,7 +23,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @TestConfiguration
-@EnableElasticsearchRepositories(basePackageClasses = { AddressQueryRepositoryImpl.class, AddressQueryRepository.class})
+@EnableElasticsearchRepositories(basePackageClasses = {AddressQueryRepositoryImpl.class,
+    AddressQueryRepository.class})
 public class TestContainer extends AbstractElasticsearchConfiguration {
 
 //    private static final String ELASTIC_IMAGE_NAME = "docker.elastic.co/elasticsearch/elasticsearch:7.15.1";
@@ -49,20 +50,20 @@ public class TestContainer extends AbstractElasticsearchConfiguration {
     @Override
     public RestHighLevelClient elasticsearchClient() {
         String hostAddress = new StringBuilder()
-                .append("localhost")
-                .append(":")
-                .append("9200")
-                .toString();
+            .append("localhost")
+            .append(":")
+            .append("9200")
+            .toString();
 
         ClientConfiguration clientConfiguration = ClientConfiguration.builder()
-                .connectedTo(hostAddress)
-                .build();
+            .connectedTo(hostAddress)
+            .build();
         RestHighLevelClient client = RestClients.create(clientConfiguration).rest();
         return client;
     }
 
 
-    private void createIndex(RestHighLevelClient client){
+    private void createIndex(RestHighLevelClient client) {
         CreateIndexRequest address = new CreateIndexRequest("address");
         try {
             client.indices().create(address, RequestOptions.DEFAULT);
@@ -77,14 +78,15 @@ public class TestContainer extends AbstractElasticsearchConfiguration {
         Template template = new Template(settings, mappings, null);
 
         ComposableIndexTemplate composableIndexTemplate = new ComposableIndexTemplate(
-                List.of("address*"),
-                template,
-                List.of(),
-                null,
-                1L,
-                null
+            List.of("address*"),
+            template,
+            List.of(),
+            null,
+            1L,
+            null
         );
-        PutComposableIndexTemplateRequest address = new PutComposableIndexTemplateRequest().name("address");
+        PutComposableIndexTemplateRequest address = new PutComposableIndexTemplateRequest().name(
+            "address");
         address.indexTemplate(composableIndexTemplate);
         try {
             client.indices().putIndexTemplate(address, RequestOptions.DEFAULT);
@@ -96,7 +98,7 @@ public class TestContainer extends AbstractElasticsearchConfiguration {
     private Settings fromPathSetting(String path) {
         String settings = readResourceFile(path);
         return Settings.builder()
-                .build();
+            .build();
     }
 
     private CompressedXContent fromPathMapping(String path) {
@@ -113,7 +115,7 @@ public class TestContainer extends AbstractElasticsearchConfiguration {
         ClassPathResource classPathResource = new ClassPathResource(path);
         String mappings = null;
         try {
-            mappings =  IOUtils.toString(classPathResource.getInputStream(), StandardCharsets.UTF_8);
+            mappings = IOUtils.toString(classPathResource.getInputStream(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException("failed to read resource mapping json file");

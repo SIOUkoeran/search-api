@@ -36,16 +36,16 @@ class AddressQueryRepositoryImplTest extends BaseTest {
         String s = queryUtils.splitQueryReturnReverse(input);
         String[] strings = queryUtils.splitQueryUntilChar(input, '-');
         List<Address> addressesByAddress
-                = this.queryRepository.findAddressesByAddress(input, s, strings, PageRequest.of(0, 10));
+            = this.queryRepository.findAddressesByAddress(input, s, strings, PageRequest.of(0, 10));
         addressesByAddress
-                .forEach(address1 -> log.info(" {} {}-{} " , address1.getAddress()
-                        ,address1.getPrimary_bun(), address1.getSecondary_bun()));
+            .forEach(address1 -> log.info(" {} {}-{} ", address1.getAddress()
+                , address1.getPrimary_bun(), address1.getSecondary_bun()));
 
         Assertions.assertThat(addressesByAddress.get(0).getAddress())
-                .isEqualTo("서울특별시 관악구 신림동");
+            .isEqualTo("서울특별시 관악구 신림동");
         Assertions.assertThat(addressesByAddress.get(0).getPrimary_bun())
-                .isEqualTo(808);
+            .isEqualTo(808);
         Assertions.assertThat(addressesByAddress.get(0).getSecondary_bun())
-                .isEqualTo(499);
+            .isEqualTo(499);
     }
 }

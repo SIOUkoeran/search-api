@@ -9,7 +9,8 @@ public class PoiSuggestDto {
 
     @NoArgsConstructor
     @Getter
-    public static class Request{
+    public static class Request {
+
         private String poi;
 
         public Request(String poi) {
@@ -19,7 +20,8 @@ public class PoiSuggestDto {
 
     @NoArgsConstructor
     @Getter
-    public static class Response{
+    public static class Response {
+
         private List<String> suggestNameList;
 
         public Response(List<String> suggestNameList) {

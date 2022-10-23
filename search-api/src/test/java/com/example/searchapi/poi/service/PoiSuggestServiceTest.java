@@ -48,11 +48,11 @@ class PoiSuggestServiceTest extends BaseTest {
         String expectedResult = "오시오상회";
         AtomicInteger i = new AtomicInteger(1);
         List<String> suggestNameList = response.getSuggestNameList();
-        IntStream.range(1,5)
-                        .forEach(idx ->
-                                Assertions.assertThat(suggestNameList.get(idx))
-                                        .isEqualTo(expectedResult + String.valueOf(idx) + " ")
-                        )
+        IntStream.range(1, 5)
+            .forEach(idx ->
+                Assertions.assertThat(suggestNameList.get(idx))
+                    .isEqualTo(expectedResult + String.valueOf(idx) + " ")
+            )
         ;
     }
 }

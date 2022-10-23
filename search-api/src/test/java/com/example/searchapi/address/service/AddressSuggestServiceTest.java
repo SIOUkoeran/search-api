@@ -2,7 +2,6 @@ package com.example.searchapi.address.service;
 
 
 import com.example.searchapi.BaseTest;
-import com.example.searchapi.address.dto.AddressDto;
 import com.example.searchapi.address.dto.SuggestAddressDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -13,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 public class AddressSuggestServiceTest extends BaseTest {
@@ -37,14 +34,14 @@ public class AddressSuggestServiceTest extends BaseTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"중랑구, 서울특별시 중랑구 묵동 385-0,1", "관악구, 서울특별시 관악구 신림동,5","서울, 서울특별시, 5"})
+    @CsvSource({"중랑구, 서울특별시 중랑구 묵동 385-0,1", "관악구, 서울특별시 관악구 신림동,5", "서울, 서울특별시, 5"})
     @DisplayName("중랑구 자동완성 검색 기대값 = 1")
     void testSuggestAddress2(
             String input,
             String expectedResult,
             int expectedSize
     ) {
-        SuggestAddressDto.Request req= new SuggestAddressDto.Request(input);
+        SuggestAddressDto.Request req = new SuggestAddressDto.Request(input);
         SuggestAddressDto.Response response = addressSuggestService.suggestAddress(req);
         Assertions.assertThat(response.getAddress().size()).isEqualTo(expectedSize);
         response.getAddress()
@@ -64,7 +61,7 @@ public class AddressSuggestServiceTest extends BaseTest {
             String expectedResult,
             int expectedSize
     ) {
-        SuggestAddressDto.Request req= new SuggestAddressDto.Request(input);
+        SuggestAddressDto.Request req = new SuggestAddressDto.Request(input);
         SuggestAddressDto.Response response = addressSuggestService.suggestAddress(req);
         Assertions.assertThat(response.getAddress().size()).isEqualTo(expectedSize);
         response.getAddress()

@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class NotFoundAddressException extends CustomException {
+
     public NotFoundAddressException() {
         super(ErrorCode.NOT_FOUND_ADDRESS);
     }

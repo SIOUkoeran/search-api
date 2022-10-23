@@ -11,7 +11,7 @@ public class SearchPoi {
 
     @NoArgsConstructor
     @Getter
-    public final static class Response{
+    public final static class Response {
 
         private List<Poi> poi;
 

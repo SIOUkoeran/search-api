@@ -46,7 +46,7 @@ class AddressRepositoryTest {
         List<Address> all = addressQueryRepository.findAll();
         Assertions.assertThat(all.size()).isEqualTo(10);
         all.stream()
-                .forEach(address -> logger.info("{}", address.getAddress()));
+            .forEach(address -> logger.info("{}", address.getAddress()));
     }
 
     @Test
@@ -55,10 +55,11 @@ class AddressRepositoryTest {
         String reverse = queryUtils.splitQueryReturnReverse(s);
         String[] strings = queryUtils.splitQueryUntilChar(s, '-');
         List<Address> addressesByAddress =
-                this.addressQueryRepository
-                        .findAddressesByAddress(s, reverse, strings, PageRequest.of(0, 10));
+            this.addressQueryRepository
+                .findAddressesByAddress(s, reverse, strings, PageRequest.of(0, 10));
         addressesByAddress.forEach(
-                address -> logger.info("{} : {} {}", address.getAddress(), address.getPrimary_bun(), address.getSecondary_bun())
+            address -> logger.info("{} : {} {}", address.getAddress(), address.getPrimary_bun(),
+                address.getSecondary_bun())
         );
         Address highestScoreAddress = addressesByAddress.get(0);
         Assertions.assertThat(highestScoreAddress.getPrimary_bun()).isEqualTo(808);

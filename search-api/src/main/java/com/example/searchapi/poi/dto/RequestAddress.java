@@ -12,7 +12,7 @@ import javax.validation.constraints.NotEmpty;
 public class RequestAddress {
 
     @Getter
-    public final static class address{
+    public final static class address {
 
         @NotEmpty
         private String address;

@@ -28,25 +28,27 @@ class AddressSuggestQueryRepositoryImplTest extends BaseTest {
     @Autowired
     AddressSuggestQueryRepository addressSuggestQueryRepository;
 
-    private final Logger logger = LoggerFactory.getLogger(AddressSuggestQueryRepositoryImplTest.class);
+    private final Logger logger = LoggerFactory.getLogger(
+        AddressSuggestQueryRepositoryImplTest.class);
 
     @Test
     void testSuggestAddressQuery() {
         String input = "중랑";
         CompletionSuggestion compSuggestion =
-                (CompletionSuggestion) this.addressSuggestQueryRepository.suggestAddressByAddress(input);
+            (CompletionSuggestion) this.addressSuggestQueryRepository.suggestAddressByAddress(
+                input);
 
         ObjectMapper objectMapper = new ObjectMapper();
 
         List<CompletionSuggestion.Entry> entryList = compSuggestion.getEntries();
-        if(entryList != null) {
+        if (entryList != null) {
             for (CompletionSuggestion.Entry entry : entryList) {
                 List<CompletionSuggestion.Entry.Option> options = entry.getOptions();
                 if (options != null) {
                     for (CompletionSuggestion.Entry.Option option : options) {
                         SearchHit<Address> searchHit = option.getSearchHit();
                         String address = searchHit.getContent().getAddress();
-                        logger.info("address {}" , address);
+                        logger.info("address {}", address);
                     }
                 }
             }

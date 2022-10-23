@@ -27,20 +27,20 @@ public class PoiService {
     }
 
     @Transactional(readOnly = true)
-    public List<Poi> searchQueryByAddress(String address, PageRequest pageRequest){
+    public List<Poi> searchQueryByAddress(String address, PageRequest pageRequest) {
         log.info("request address {}", address);
         return poiQueryRepository.searchAddressByPrefixAddress(address, pageRequest);
 
     }
 
     @Transactional(readOnly = true)
-    public List<Poi> searchQueryByPoiCode(String poiCode , PageRequest pageRequest) {
+    public List<Poi> searchQueryByPoiCode(String poiCode, PageRequest pageRequest) {
         log.info("request address by poi_code {}", poiCode);
         return poiQueryRepository.searchAddressByPoiCode(poiCode, pageRequest);
     }
 
     @Transactional(readOnly = true)
-    public List<Poi> searchQueryByPoiCodes(List<String> poiCode , PageRequest pageRequest) {
+    public List<Poi> searchQueryByPoiCodes(List<String> poiCode, PageRequest pageRequest) {
         log.info("request address by poi_code {}", poiCode);
         return poiQueryRepository.searchAddressByPoiCodes(poiCode, pageRequest);
     }
@@ -68,14 +68,14 @@ public class PoiService {
 
     private String[] splitRequest(String fname, String cname) {
         return new String[]{
-                fname + " " + cname,
-                cname
+            fname + " " + cname,
+            cname
         };
     }
 
     public UpdatePoi.Response updatePoi(String id, UpdatePoi.Request request) {
         Poi poi = this.poiRepository.findById(id)
-                .orElseThrow(NotFoundPoiException::new);
+            .orElseThrow(NotFoundPoiException::new);
         String[] input = splitRequest(request.getFname(), request.getCname());
         Poi update = poi.update(request, input);
         Poi save = this.poiRepository.save(update);
@@ -83,7 +83,8 @@ public class PoiService {
     }
 
     @Transactional(readOnly = true)
-    public List<Poi> searchPoiByNameFilterPoiCodes(String name, String field, String category, PageRequest of) {
+    public List<Poi> searchPoiByNameFilterPoiCodes(String name, String field, String category,
+        PageRequest of) {
         return this.poiQueryRepository.searchPoiByNameFilterPoiCodes(name, field, category, of);
     }
 }

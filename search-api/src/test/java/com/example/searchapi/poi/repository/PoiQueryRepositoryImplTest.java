@@ -36,7 +36,7 @@ class PoiQueryRepositoryImplTest extends BaseTest {
         List<Poi> pois = this.poiQueryRepository.searchPoiByName(name, PageRequest.of(0, 10));
         assertThat(pois.size()).isEqualTo(5);
         pois
-                .forEach(poi -> log.info("poi : {}", poi.getFname()));
+            .forEach(poi -> log.info("poi : {}", poi.getFname()));
     }
 
     @Test
@@ -45,7 +45,8 @@ class PoiQueryRepositoryImplTest extends BaseTest {
         String name = "오시오장";
         String field = "large_category";
         String category = "쇼핑";
-        List<Poi> poiResult = this.poiQueryRepository.searchPoiByNameFilterPoiCodes(name, field, category, PageRequest.of(0, 20));
+        List<Poi> poiResult = this.poiQueryRepository.searchPoiByNameFilterPoiCodes(name, field,
+            category, PageRequest.of(0, 20));
         List<Poi> pois = this.poiQueryRepository.searchPoiByName(name, PageRequest.of(0, 10));
 
         Assertions.assertThat(poiResult.size()).isEqualTo(5);
@@ -53,21 +54,22 @@ class PoiQueryRepositoryImplTest extends BaseTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"오시오,large_category,쇼핑","오시오,medium_category,기타", "오시오,small_category,기타"})
+    @CsvSource({"오시오,large_category,쇼핑", "오시오,medium_category,기타", "오시오,small_category,기타"})
     @DisplayName("poi 이름 필터 검색")
     void testPoiNameWithFilterCategoryService() {
         String name = "오시오";
         String field = "large_category";
         String category = "쇼핑";
         List<Poi> pois
-                = this.poiQueryRepository.searchPoiByNameFilterPoiCodes(name, field, category, PageRequest.of(0, 10));
+            = this.poiQueryRepository.searchPoiByNameFilterPoiCodes(name, field, category,
+            PageRequest.of(0, 10));
         pois.forEach(
-                poi -> log.info("poi : {}", poi.getFname())
+            poi -> log.info("poi : {}", poi.getFname())
         );
 
         Assertions.assertThat(pois.size()).isEqualTo(5);
         pois.forEach(
-                poi -> Assertions.assertThat(poi.getFname().contains("오시오")).isTrue()
+            poi -> Assertions.assertThat(poi.getFname().contains("오시오")).isTrue()
         );
     }
 
@@ -78,34 +80,37 @@ class PoiQueryRepositoryImplTest extends BaseTest {
         String field = "large_category";
         String category = "식사";
         List<Poi> pois =
-                this.poiQueryRepository.searchPoiByNameFilterPoiCodes(name, field, category, PageRequest.of(0, 10));
+            this.poiQueryRepository.searchPoiByNameFilterPoiCodes(name, field, category,
+                PageRequest.of(0, 10));
         pois.forEach(
-                poi -> log.info("poi : {}", poi.getFname())
+            poi -> log.info("poi : {}", poi.getFname())
         );
 
         Assertions.assertThat(pois.isEmpty()).isTrue();
     }
 
     @ParameterizedTest
-    @CsvSource({"오시오장,large_category,쇼핑,오시오", "김밥천국,large_category,식사,김밥천국", "김밥연국,large_category,식사,김밥천국"})
+    @CsvSource({"오시오장,large_category,쇼핑,오시오", "김밥천국,large_category,식사,김밥천국",
+        "김밥연국,large_category,식사,김밥천국"})
     @DisplayName("poi 필터 보정 테스트")
     void testPoiNameSearchWithLargeCategoryFilterAndFuzzy(
-            String fname,
-            String categoryField,
-            String category,
-            String expectedFname
+        String fname,
+        String categoryField,
+        String category,
+        String expectedFname
     ) {
         List<Poi> pois
-                = this.poiQueryRepository.searchPoiByNameFilterPoiCodes(fname, categoryField, category, PageRequest.of(0, 10));
+            = this.poiQueryRepository.searchPoiByNameFilterPoiCodes(fname, categoryField, category,
+            PageRequest.of(0, 10));
 
         pois.forEach(
-                poi -> log.info("poi {}", poi.getFname())
+            poi -> log.info("poi {}", poi.getFname())
         );
         pois.forEach(
-                poi -> {
-                    Assertions.assertThat(poi.getFname()).contains(expectedFname);
-                    Assertions.assertThat(poi.getLarge_category()).isEqualTo(category);
-                }
+            poi -> {
+                Assertions.assertThat(poi.getFname()).contains(expectedFname);
+                Assertions.assertThat(poi.getLarge_category()).isEqualTo(category);
+            }
         );
     }
 }

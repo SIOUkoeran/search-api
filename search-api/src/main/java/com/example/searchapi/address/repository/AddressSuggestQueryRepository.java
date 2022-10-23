@@ -9,7 +9,11 @@ import java.util.List;
 
 @Repository
 public interface AddressSuggestQueryRepository {
-    Suggest.Suggestion<? extends Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option>> suggestAddressByAddress(String address);
+
+    Suggest.Suggestion<? extends Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option>> suggestAddressByAddress(
+        String address);
+
     List<SearchHit<Address>> suggestPrimaryBunByPrimary(String primaryBun);
+
     List<SearchHit<Address>> suggestSecondaryBunBySecondary(String secondaryBun);
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class NotFoundPoiException extends CustomException {
+
     public NotFoundPoiException() {
         super(ErrorCode.NOT_FOUND_POI);
     }
