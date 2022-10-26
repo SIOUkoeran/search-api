@@ -2,6 +2,8 @@ package com.example.searchapi.address.repository;
 
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.common.query.QuerySuggestUtils;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
@@ -13,10 +15,6 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.suggest.response.Suggest;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 @Component
 @Slf4j
@@ -35,7 +33,7 @@ public class AddressSuggestQueryRepositoryImpl implements AddressSuggestQueryRep
     public Suggest.Suggestion<? extends Suggest.Suggestion.Entry<? extends Suggest.Suggestion.Entry.Option>> suggestAddressByAddress(
         String address) {
         CompletionSuggestionBuilder completionQuery = querySuggestUtils.createCompletionQuery(
-            address, 5, "address_suggest.suggest");
+            address, 5, "address_suggest");
         SuggestBuilder suggestQuery = querySuggestUtils.createSuggestBuilder(
             List.of("address-suggest"), completionQuery);
         NativeSearchQuery query = new NativeSearchQueryBuilder()

@@ -3,12 +3,11 @@ package com.example.searchapi.address.service;
 import com.example.searchapi.address.dto.SuggestAddressDto;
 import com.example.searchapi.address.repository.AddressSuggestQueryRepository;
 import com.example.searchapi.common.query.QuerySuggestUtils;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.elasticsearch.core.suggest.response.CompletionSuggestion;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Slf4j
@@ -25,6 +24,7 @@ public class AddressSuggestService {
 
     @Transactional(readOnly = true)
     public SuggestAddressDto.Response suggestAddress(SuggestAddressDto.Request suggest) {
+        suggest.addressReplace(" ", "");
         CompletionSuggestion compSuggestion = (CompletionSuggestion) this.addressSuggestQueryRepository
             .suggestAddressByAddress(suggest.getAddress());
         List<String> addressList = querySuggestUtils.convertToAddressList(compSuggestion);

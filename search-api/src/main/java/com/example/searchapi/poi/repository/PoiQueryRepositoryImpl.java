@@ -1,14 +1,25 @@
 package com.example.searchapi.poi.repository;
 
+import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.BEST_FIELDS;
+import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.BOOL_PREFIX;
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
+
 import com.example.searchapi.poi.model.Poi;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.indices.AnalyzeRequest;
 import org.elasticsearch.client.indices.AnalyzeResponse;
 import org.elasticsearch.common.unit.Fuzziness;
-import org.elasticsearch.index.query.QueryRewriteContext;
-import org.elasticsearch.search.rescore.QueryRescorerBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
@@ -17,14 +28,6 @@ import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Component;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
-import static org.elasticsearch.index.query.MultiMatchQueryBuilder.Type.*;
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Component
 @RequiredArgsConstructor
@@ -149,8 +152,8 @@ public class PoiQueryRepositoryImpl implements PoiQueryRepository {
                     .boost(0.3f)
                     .fuzzyTranspositions(false)
                 )
+                .filter(termQuery(category, field))
             )
-            .withFilter(termsQuery(field, category))
             .withPageable(pageRequest)
             .build();
         return operations.search(query, Poi.class, IndexCoordinates.of("poi"))

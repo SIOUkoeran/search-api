@@ -1,28 +1,33 @@
 package com.example.searchapi.address.dto;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @SuppressWarnings("checkstyle:MissingJavadocType")
-@NoArgsConstructor
 public class SuggestAddressDto {
 
+
+    @NoArgsConstructor
     @Getter
     public static class Request {
 
-        private final String address;
+        private String address;
 
         public Request(String address) {
             this.address = address.replaceAll(" ", "");
         }
+
+        public void addressReplace(String regex, String replacement) {
+            this.address = this.address.replaceAll(regex, replacement);
+        }
     }
 
     @Getter
+    @NoArgsConstructor
     public static class Response {
 
-        private final List<String> address;
+        private List<String> address;
 
         public Response(List<String> address) {
             this.address = address;
