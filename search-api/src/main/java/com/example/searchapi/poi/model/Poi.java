@@ -3,17 +3,16 @@ package com.example.searchapi.poi.model;
 
 import com.example.searchapi.poi.dto.CreatePoi;
 import com.example.searchapi.poi.dto.UpdatePoi;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.Embedded;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.CompletionField;
 import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.core.suggest.Completion;
-
-import javax.persistence.Embedded;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 
 
 @Document(indexName = "poi")
@@ -48,8 +47,9 @@ public class Poi {
     @Embedded
     private Location location;
 
-    @CompletionField
-    private Completion poi_suggest;
+    @CompletionField(analyzer = "suggest_index_analyzer", searchAnalyzer = "suggest_search_analyzer")
+    @JsonIgnore
+    private String poi_suggest;
 
     public Poi(CreatePoi.Request request, String[] input) {
         this.poi_code = request.getPoiCode();
@@ -60,7 +60,7 @@ public class Poi {
         this.phone_c = request.getPhoneC();
         this.zip_code = request.getZipCode();
         this.location = new Location(request.getLon(), request.getLan());
-        this.poi_suggest = new Completion(input);
+        poi_suggest = input[0];
     }
 
     public Poi update(UpdatePoi.Request request, String[] input) {
@@ -72,7 +72,7 @@ public class Poi {
         this.phone_c = request.getPhoneC();
         this.zip_code = request.getZipCode();
         this.location = new Location(request.getLon(), request.getLan());
-        this.poi_suggest = new Completion(input);
+        poi_suggest = input[0];
         return this;
     }
 }

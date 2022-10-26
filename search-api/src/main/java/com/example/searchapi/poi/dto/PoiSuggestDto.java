@@ -1,9 +1,8 @@
 package com.example.searchapi.poi.dto;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 public class PoiSuggestDto {
 
@@ -15,6 +14,10 @@ public class PoiSuggestDto {
 
         public Request(String poi) {
             this.poi = poi;
+        }
+
+        public void replaceAll(String regex, String replacement) {
+            this.poi = this.poi.replaceAll(regex, replacement);
         }
     }
 

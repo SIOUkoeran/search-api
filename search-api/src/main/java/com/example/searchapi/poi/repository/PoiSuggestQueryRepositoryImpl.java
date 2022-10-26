@@ -2,6 +2,8 @@ package com.example.searchapi.poi.repository;
 
 import com.example.searchapi.common.query.QuerySuggestUtils;
 import com.example.searchapi.poi.model.Poi;
+import java.util.List;
+import java.util.Objects;
 import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
@@ -11,9 +13,6 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.suggest.response.Suggest;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Objects;
 
 @Component
 public class PoiSuggestQueryRepositoryImpl implements PoiSuggestQueryRepository {
@@ -38,7 +37,7 @@ public class PoiSuggestQueryRepositoryImpl implements PoiSuggestQueryRepository 
         NativeSearchQuery query = new NativeSearchQueryBuilder()
             .withSuggestBuilder(suggestQuery)
             .build();
-
+        
         SearchHits<Poi> poi = operations.search(query, Poi.class, IndexCoordinates.of("poi"));
         return Objects.requireNonNull(poi.getSuggest()).getSuggestion("poi-suggest");
     }
