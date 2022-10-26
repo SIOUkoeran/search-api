@@ -1,0 +1,49 @@
+### poi별 업종분포
+
+{
+  "aggs": {
+    "0": {
+      "terms": {
+        "field": "small_category",
+        "order": {
+          "_count": "desc"
+        },
+        "size": 1000
+      }
+    }
+  },
+  "size": 0,
+  "fields": [
+    {
+      "field": "@timestamp",
+      "format": "date_time"
+    }
+  ],
+  "script_fields": {},
+  "stored_fields": [
+    "*"
+  ],
+  "runtime_mappings": {},
+  "_source": {
+    "excludes": []
+  },
+  "query": {
+    "bool": {
+      "must": [],
+      "filter": [
+        {
+          "range": {
+            "@timestamp": {
+              "format": "strict_date_optional_time",
+              "gte": "2022-10-11T08:09:27.266Z",
+              "lte": "2022-10-23T08:36:54.282Z"
+            }
+          }
+        }
+      ],
+      "should": [],
+      "must_not": []
+    }
+  }
+}
+
