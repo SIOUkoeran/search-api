@@ -3,6 +3,7 @@ package com.example.searchapi.address.model;
 import com.example.searchapi.address.dto.AddressDto;
 import com.example.searchapi.address.dto.CreateAddressDto;
 import com.example.searchapi.address.dto.UpdateAddress;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import lombok.AccessLevel;
@@ -30,6 +31,7 @@ public class Address {
     private int secondary_bun;
 
     @CompletionField(searchAnalyzer = "suggest_search_analyzer", analyzer = "suggest_index_analyzer")
+    @JsonIgnore
     private String address_suggest;
 
     @Override
@@ -70,5 +72,13 @@ public class Address {
         this.primary_bun = request.getPrimaryBun();
         this.secondary_bun = request.getSecondaryBun();
         this.poi_id = poiId;
+    }
+
+    public void appendBun(StringBuilder sb) {
+        if (primary_bun != 0) {
+            sb.append(primary_bun);
+            if (secondary_bun != 0)
+                sb.append("-").append(secondary_bun);
+        }
     }
 }

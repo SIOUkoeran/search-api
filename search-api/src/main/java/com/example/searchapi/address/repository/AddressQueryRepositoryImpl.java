@@ -1,9 +1,20 @@
 package com.example.searchapi.address.repository;
 
-import com.example.searchapi.address.dto.AddressDto;
+import static com.example.searchapi.address.model.AddressColumn.ADDRESS;
+import static com.example.searchapi.address.model.AddressColumn.PRIMARYBUN;
+import static com.example.searchapi.address.model.AddressColumn.SECONDATYBUN;
+import static org.elasticsearch.index.query.QueryBuilders.boolQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
+import static org.elasticsearch.index.query.QueryBuilders.matchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.multiMatchQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termQuery;
+import static org.elasticsearch.index.query.QueryBuilders.termsQuery;
+
 import com.example.searchapi.address.exception.NotFoundAddressException;
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.common.query.QueryUtils;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.search.sort.SortBuilders;
@@ -14,12 +25,6 @@ import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.example.searchapi.address.model.AddressColumn.*;
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 @Repository
 @Slf4j
@@ -36,16 +41,13 @@ public class AddressQueryRepositoryImpl implements AddressQueryRepository {
         String[] bun, PageRequest pageRequest) {
 
         NativeSearchQuery query = new NativeSearchQueryBuilder()
+            .withMinScore(2.5f)
             .withQuery(boolQuery()
                 .should(
                     multiMatchQuery(address)
                         .field(ADDRESS.getColumn())
-                        .field("address.edge")
-                        .fuzziness(Fuzziness.ONE)
-                ).should(
-                    multiMatchQuery(reversedAddressArray)
-                        .field(ADDRESS.getColumn())
-                        .field("address.edge")
+                        .field("address._gram")
+                        .fuzziness(Fuzziness.AUTO)
                 )
                 .should(
                     multiMatchQuery(bun[0], PRIMARYBUN.getColumn())
