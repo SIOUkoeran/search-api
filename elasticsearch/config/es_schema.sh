@@ -4,7 +4,7 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 {
 	"settings" : {
 		"index" : {
-			"number_of_shards" : 1,
+			"number_of_shards" : 3,
 			"number_of_replicas" : 1
 		},
 		"analysis" : {
@@ -48,11 +48,11 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 				"suggest_index_analyzer" : {
 					"type" : "custom",
 					"tokenizer" : "jaso_tokenizer",
-					"filter" : ["suggest_filter"]
+					"filter" : ["shingle"]
 				}
 			}
 		},
-		"refresh_interval" : "5s"
+		"refresh_interval" : "50s"
 	},
 	"mappings" : {
 		"properties" : {
@@ -108,7 +108,7 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
 {
 	"settings" : {
     "index" : {
-      "number_of_shards" : 1,
+      "number_of_shards" : 3,
       "number_of_replicas" : 1
     },
     "analysis" : {
@@ -160,7 +160,7 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
 		"suggest_index_analyzer" : {
 			"type" : "custom",
 			"tokenizer" : "jaso_tokenizer",
-			"filter" : ["suggest_filter"]
+			"filter" : ["shingle"]
 		}
       }
     },
