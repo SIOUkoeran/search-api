@@ -36,8 +36,9 @@ public class PoiSuggestQueryRepositoryImpl implements PoiSuggestQueryRepository 
 
         NativeSearchQuery query = new NativeSearchQueryBuilder()
             .withSuggestBuilder(suggestQuery)
+            .withMaxResults(5)
             .build();
-        
+
         SearchHits<Poi> poi = operations.search(query, Poi.class, IndexCoordinates.of("poi"));
         return Objects.requireNonNull(poi.getSuggest()).getSuggestion("poi-suggest");
     }

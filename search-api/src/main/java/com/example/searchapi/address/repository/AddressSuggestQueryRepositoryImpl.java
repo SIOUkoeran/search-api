@@ -9,7 +9,6 @@ import org.elasticsearch.search.suggest.SuggestBuilder;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
@@ -38,12 +37,12 @@ public class AddressSuggestQueryRepositoryImpl implements AddressSuggestQueryRep
             List.of("address-suggest"), completionQuery);
         NativeSearchQuery query = new NativeSearchQueryBuilder()
             .withSuggestBuilder(suggestQuery)
+            .withMaxResults(5)
             .build();
         log.debug("request suggest query {}", query.toString());
-        SearchHits<Address> responseAddress = operations.search(query, Address.class,
-            IndexCoordinates.of("address"));
-        log.debug("response suggest address {}", responseAddress.getSuggest());
-        return responseAddress.getSuggest().getSuggestion("address-suggest");
+        return operations.search(query, Address.class,
+                IndexCoordinates.of("address"))
+            .getSuggest().getSuggestion("address-suggest");
     }
 
     @Override

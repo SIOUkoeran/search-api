@@ -32,12 +32,8 @@ public class QuerySuggestUtils {
                         SearchHit<Address> searchHit = option.getSearchHit();
                         Address address = searchHit.getContent();
                         sb.setLength(0);
-                        sb.append(address.getAddress())
-                            .append(" ")
-                            .append(address.getPrimary_bun())
-                            .append("-")
-                            .append(address.getSecondary_bun())
-                        ;
+                        sb.append(address.getAddress());
+                        address.appendBun(sb);
                         addressList.add(String.valueOf(sb));
                     }
                 }
