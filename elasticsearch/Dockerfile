@@ -1,5 +1,8 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch:7.15.1
+FROM docker.elastic.co/elasticsearch/elasticsearch:7.16.2
 
 WORKDIR /usr/share/elasticsearch
 
 RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch analysis-nori
+
+RUN /usr/share/elasticsearch/bin/elasticsearch-plugin install \
+ https://github.com/netcrazy/elasticsearch-jaso-analyzer/releases/download/v7.16.2/jaso-analyzer-plugin-7.16.2-plugin.zip
