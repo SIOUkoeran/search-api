@@ -90,19 +90,11 @@ curl -XPUT http://cluster1-master-node:9200/poi -H Content-Type:application/json
 				"type" : "integer",
 				"null_value" : -1
 				},
-				"poi_suggest" : {
-					"type" : "text",
-					"store": true,
-					"analyzer" : "suggest_index_analyzer",
-					"search_analyzer" : "suggest_search_analyzer",
-					"fields" : {
-						"suggest" : {
-							"type" : "completion",
-							"analyzer" : "suggest_index_analyzer",
-							"search_analyzer" : "suggest_search_analyzer"
-						}
-					}
-				},
+			"poi_suggest" : {
+				"type" : "completion",
+				"analyzer" : "suggest_index_analyzer",
+				"search_analyzer" : "suggest_search_analyzer"
+			},
 			"zip_code" : {"type" : "integer"},
 			"location" : {"type" : "geo_point"},
 			"large_category" : {"type" : "keyword"},
@@ -117,8 +109,7 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
 	"settings" : {
     "index" : {
       "number_of_shards" : 1,
-      "number_of_replicas" : 1,
-	  "max_ngram_diff" : "100"
+      "number_of_replicas" : 1
     },
     "analysis" : {
       "filter" : {
@@ -173,7 +164,7 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
 		}
       }
     },
-    "refresh_interval" : "5s"
+    "refresh_interval" : "50s"
 },
 	"mappings" : {
     "properties" : {
@@ -185,18 +176,10 @@ curl -XPUT http://cluster1-master-node:9200/address -H Content-Type:application/
         "search_analyzer" : "standard"
       },
 	  "address_suggest" : {
-		"type" : "text",
-		"store" : true,
-		"analyzer" : "suggest_index_analyzer",
-		"search_analyzer" : "suggest_search_analyzer",
-		"fields" : {
-			"suggest" : {
-				"type" : "completion",
-				"analyzer" : "suggest_index_analyzer",
-				"search_analyzer" : "suggest_search_analyzer"
-			}
-		}
-	  },
+			"type" : "completion",
+			"analyzer" : "suggest_index_analyzer",
+			"search_analyzer" : "suggest_search_analyzer"
+		},
       "san_bun" : {
         "type" : "text",
         "search_analyzer" : "standard",
