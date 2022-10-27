@@ -28,46 +28,50 @@ public class AddressSuggestServiceTest extends BaseTest {
         SuggestAddressDto.Request request = new SuggestAddressDto.Request(address);
         SuggestAddressDto.Response response = addressSuggestService.suggestAddress(request);
         response.getAddress().forEach(
-                addresses -> log.info("address {}", addresses)
+            addresses -> log.info("address {}", addresses)
         );
         Assertions.assertThat(response.getAddress().size()).isEqualTo(5);
     }
 
     @ParameterizedTest
-    @CsvSource({"중랑구, 서울특별시 중랑구 묵동 385-0,1", "관악구, 서울특별시 관악구 신림동,5", "서울, 서울특별시, 5"})
+    @CsvSource({"중랑구, 서울특별시 중랑구 묵동,1", "관악구, 서울특별시 관악구 신림동,5", "서울, 서울특별시, 5"})
     @DisplayName("중랑구 자동완성 검색 기대값 = 1")
     void testSuggestAddress2(
-            String input,
-            String expectedResult,
-            int expectedSize
+        String input,
+        String expectedResult,
+        int expectedSize
     ) {
         SuggestAddressDto.Request req = new SuggestAddressDto.Request(input);
         SuggestAddressDto.Response response = addressSuggestService.suggestAddress(req);
         Assertions.assertThat(response.getAddress().size()).isEqualTo(expectedSize);
         response.getAddress()
-                .forEach(
-                        a -> {
-                            Assertions.assertThat(a).startsWith(expectedResult);
-                            log.info("address {} ", a);
-                        }
-                );
+            .forEach(
+                a -> {
+                    Assertions.assertThat(a).startsWith(expectedResult);
+                    log.info("address {} ", a);
+                }
+            );
     }
 
     @ParameterizedTest
-    @CsvSource({"중ㄹ,서울특별시 중랑구 묵동,1"})
+    @CsvSource({"중랑ㄱ,서울특별시 중랑구 묵동,1"})
     @DisplayName("자음 모음 분리되어 입력되는지 확인")
     void testJasoFilterSuggest(
-            String input,
-            String expectedResult,
-            int expectedSize
+        String input,
+        String expectedResult,
+        int expectedSize
     ) {
         SuggestAddressDto.Request req = new SuggestAddressDto.Request(input);
         SuggestAddressDto.Response response = addressSuggestService.suggestAddress(req);
-        Assertions.assertThat(response.getAddress().size()).isEqualTo(expectedSize);
         response.getAddress()
-                .forEach(
-                        a -> Assertions.assertThat(a).startsWith(expectedResult)
-                );
+            .forEach(
+                a -> {
+                    Assertions.assertThat(a).startsWith(expectedResult);
+                    log.info("{}", a);
+                }
+            );
+        Assertions.assertThat(response.getAddress().size()).isEqualTo(expectedSize);
+
     }
 //
 //    @ParameterizedTest

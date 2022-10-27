@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.CompletionField;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
 
 
 @Document(indexName = "address")
@@ -22,7 +23,11 @@ public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String poi_id;
+    private String id;
+
+    @Field(name = "poi_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String poiId;
 
     private String poi_code;
     private String address;
@@ -37,7 +42,7 @@ public class Address {
     @Override
     public String toString() {
         return "Address{" +
-            ", poi_id='" + poi_id + '\'' +
+            ", poi_id='" + id + '\'' +
             ", poi_code='" + poi_code + '\'' +
             ", address='" + address + '\'' +
             ", san_bun=" + san_bun +
@@ -53,7 +58,7 @@ public class Address {
         this.primary_bun = request.getPrimaryBun();
         this.secondary_bun = request.getSecondaryBun();
         address_suggest = addressSuggest[0];
-        this.poi_id = poiId;
+        this.poiId = poiId;
     }
 
     public Address update(UpdateAddress.Request request, String[] addressSuggest) {
@@ -62,6 +67,7 @@ public class Address {
         this.san_bun = request.getSanBun();
         this.primary_bun = request.getPrimaryBun();
         this.secondary_bun = request.getSecondaryBun();
+        this.address_suggest = address_suggest.toString();
         return this;
     }
 
@@ -71,14 +77,15 @@ public class Address {
         this.san_bun = request.getSanBun();
         this.primary_bun = request.getPrimaryBun();
         this.secondary_bun = request.getSecondaryBun();
-        this.poi_id = poiId;
+        this.id = poiId;
     }
 
     public void appendBun(StringBuilder sb) {
         if (primary_bun != 0) {
             sb.append(primary_bun);
-            if (secondary_bun != 0)
+            if (secondary_bun != 0) {
                 sb.append("-").append(secondary_bun);
+            }
         }
     }
 }

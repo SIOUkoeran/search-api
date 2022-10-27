@@ -4,6 +4,7 @@ import com.example.searchapi.address.model.Address;
 import com.example.searchapi.common.query.QueryUtils;
 import com.example.searchapi.container.IndexConfig;
 import com.example.searchapi.container.TestContainer;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.jupiter.api.Test;
@@ -14,9 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-
-import java.io.IOException;
-import java.util.List;
 
 @Import({TestContainer.class})
 @SpringBootTest
@@ -39,15 +37,6 @@ class AddressRepositoryTest {
     RestHighLevelClient client;
 
     Logger logger = LoggerFactory.getLogger(AddressRepositoryTest.class);
-
-    @Test
-    void testFindAllQuery() throws IOException {
-        logger.info("set up success");
-        List<Address> all = addressQueryRepository.findAll();
-        Assertions.assertThat(all.size()).isEqualTo(10);
-        all.stream()
-            .forEach(address -> logger.info("{}", address.getAddress()));
-    }
 
     @Test
     void testAddressByAddressQuery() {

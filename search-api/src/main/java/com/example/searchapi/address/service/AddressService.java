@@ -3,22 +3,18 @@ package com.example.searchapi.address.service;
 import com.example.searchapi.address.dto.CreateAddressDto;
 import com.example.searchapi.address.dto.UpdateAddress;
 import com.example.searchapi.address.exception.NotFoundAddressException;
-import com.example.searchapi.address.dto.AddressDto;
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.address.repository.AddressQueryRepository;
 import com.example.searchapi.address.repository.AddressRepository;
 import com.example.searchapi.common.query.QueryPageUtils;
 import com.example.searchapi.common.query.QueryUtils;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -45,7 +41,7 @@ public class AddressService {
         return this.addressQueryRepository.findAddressesByAddress(address,
                 reverseAddress, bun, pageRequest)
             .stream()
-            .map(Address::getPoi_id)
+            .map(Address::getId)
             .collect(Collectors.toList());
     }
 
@@ -60,7 +56,8 @@ public class AddressService {
 
     @Transactional(readOnly = true)
     public Address searchAddressByPoiId(String poiId) {
-        return this.addressQueryRepository.findAddressByPoiId(poiId);
+        return this.addressRepository.findAddressByPoiId(poiId)
+            .orElseThrow(NotFoundAddressException::new);
     }
 
     @Transactional(readOnly = true)
@@ -90,7 +87,9 @@ public class AddressService {
     }
 
     public void deleteAddress(String poiId) {
-        this.addressRepository.deleteById(poiId);
+        if (this.addressRepository.deleteByPoiId(poiId) == 0) {
+            throw new NotFoundAddressException();
+        }
     }
 
     /**
@@ -121,7 +120,7 @@ public class AddressService {
 
     public UpdateAddress.Response updateAddress(String id, UpdateAddress.Request request) {
 
-        Address findAddress = this.addressRepository.findById(id)
+        Address findAddress = this.addressRepository.findAddressByPoiId(id)
             .orElseThrow(NotFoundAddressException::new);
         String[] input
             = splitAddress(request.getAddress(), request.getPrimaryBun(),

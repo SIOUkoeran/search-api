@@ -3,10 +3,10 @@ package com.example.searchapi.address.dto;
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.poi.dto.CreatePoi;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class CreateAddressDto {
 
@@ -57,6 +57,9 @@ public class CreateAddressDto {
         @JsonProperty("poi_id")
         private String poiId;
 
+        @JsonProperty("id")
+        private String id;
+
         @JsonProperty("poi_code")
         private String poiCode;
 
@@ -72,12 +75,13 @@ public class CreateAddressDto {
         private int sanBun;
 
         public Response(Address address) {
-            this.poiId = address.getPoi_id();
+            this.poiId = address.getPoiId();
             this.poiCode = address.getPoi_code();
             this.address = address.getAddress();
             this.primaryBun = address.getPrimary_bun();
             this.secondaryBun = address.getSecondary_bun();
             this.sanBun = address.getSan_bun();
+            this.id = address.getId();
         }
     }
 }

@@ -6,6 +6,8 @@ import com.example.searchapi.address.dto.UpdateAddress;
 import com.example.searchapi.address.exception.NotFoundAddressException;
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.address.repository.AddressRepository;
+import java.util.LinkedList;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,10 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
 
 @SpringBootTest
 public class AddressServiceTest extends BaseTest {
@@ -37,7 +35,7 @@ public class AddressServiceTest extends BaseTest {
     void afterEach() {
         log.info("ready to delete address Poi");
         mustDeletePoiId.forEach(
-                poiId -> this.addressRepository.deleteById(poiId)
+            poiId -> this.addressRepository.deleteById(poiId)
         );
         log.info("success to delete addres Poi");
     }
@@ -45,55 +43,57 @@ public class AddressServiceTest extends BaseTest {
     @ParameterizedTest
     @CsvSource({"address,서울특별시 관악구 신림동,0XFFFF,808,400"})
     @DisplayName("address 데이터 생성 후 저장")
-    void createAddressAndSaveTest(String name, String address, String poiCode, int primaryBun, int secondaryBun) {
+    void createAddressAndSaveTest(String name, String address, String poiCode, int primaryBun,
+        int secondaryBun) {
 
         int sanBun = 0;
         CreateAddressDto.Request request
-                = new CreateAddressDto.Request(poiCode, address, primaryBun, secondaryBun, sanBun);
-        CreateAddressDto.Response savedAddress = this.addressService.createAddress(request, "1");
+            = new CreateAddressDto.Request(poiCode, address, primaryBun, secondaryBun, sanBun);
+        CreateAddressDto.Response savedAddress = this.addressService.createAddress(request, "-1");
         log.info(savedAddress.getAddress());
         Assertions.assertThat(request.getAddress()).isEqualTo(savedAddress.getAddress());
         Assertions.assertThat(request.getPoiCode()).isEqualTo(savedAddress.getPoiCode());
         Assertions.assertThat(request.getPrimaryBun()).isEqualTo(savedAddress.getPrimaryBun());
         Assertions.assertThat(request.getSecondaryBun()).isEqualTo(savedAddress.getSecondaryBun());
 
-        this.addressRepository.deleteById(savedAddress.getPoiId());
-        mustDeletePoiId.add(savedAddress.getPoiId());
+        this.addressRepository.deleteById(savedAddress.getId());
+        mustDeletePoiId.add(savedAddress.getId());
     }
 
     @ParameterizedTest
     @DisplayName("address 삭제 업데이트 테스트")
     @CsvSource({"address,서울특별시 관악구 신림동,0XFFFF,808,400"})
-    void testDeleteAddressDocument(String name, String address, String poiCode, int primaryBun, int secondaryBun) {
+    void testDeleteAddressDocument(String name, String address, String poiCode, int primaryBun,
+        int secondaryBun) {
         int sanBun = 0;
         CreateAddressDto.Request request
-                = new CreateAddressDto.Request(poiCode, address, primaryBun, secondaryBun, sanBun);
-        CreateAddressDto.Response savedAddress = this.addressService.createAddress(request, "2");
-        Address find = this.addressRepository.findById(savedAddress.getPoiId())
-                .orElseThrow(NotFoundAddressException::new);
-        this.addressRepository.deleteById(find.getPoi_id());
-        Assertions.assertThat(this.addressRepository.existsById("2")).isFalse();
+            = new CreateAddressDto.Request(poiCode, address, primaryBun, secondaryBun, sanBun);
+        CreateAddressDto.Response savedAddress = this.addressService.createAddress(request, "-1");
+        Address find = this.addressRepository.findAddressByPoiId(savedAddress.getPoiId())
+            .orElseThrow(NotFoundAddressException::new);
+        this.addressRepository.deleteById(find.getId());
+        Assertions.assertThat(this.addressRepository.existsById(find.getId())).isFalse();
     }
 
     @ParameterizedTest
     @DisplayName("address 도큐먼트 업데이트 테스트")
     @CsvSource({"address,서울특별시 관악구 신림동,0XFFFF,808,400,서울특별시 종로구 목동"})
     void testUpdateAddressDocument(String name, String address, String poiCode,
-                                   int primaryBun, int secondaryBun, String changeAddress) {
+        int primaryBun, int secondaryBun, String changeAddress) {
         int sanBun = 0;
         CreateAddressDto.Request request
-                = new CreateAddressDto.Request(poiCode, address, primaryBun, secondaryBun, sanBun);
-        CreateAddressDto.Response savedAddress = this.addressService.createAddress(request, "1");
+            = new CreateAddressDto.Request(poiCode, address, primaryBun, secondaryBun, sanBun);
+        CreateAddressDto.Response savedAddress = this.addressService.createAddress(request, "-1");
 
-        Address find = this.addressRepository.findById("1")
-                .orElseThrow(NotFoundAddressException::new);
+        Address find = this.addressRepository.findAddressByPoiId("-1")
+            .orElseThrow(NotFoundAddressException::new);
 
         UpdateAddress.Request updateRequest = new UpdateAddress.Request(
-                poiCode, changeAddress,primaryBun, secondaryBun, sanBun
+            poiCode, changeAddress, primaryBun, secondaryBun, sanBun
         );
-        UpdateAddress.Response response = addressService.updateAddress("1", updateRequest);
+        UpdateAddress.Response response = addressService.updateAddress("-1", updateRequest);
 
         Assertions.assertThat(response.getAddress().getAddress()).isEqualTo(changeAddress);
-        mustDeletePoiId.add("1");
+        mustDeletePoiId.add(find.getId());
     }
 }

@@ -10,9 +10,11 @@ import javax.persistence.GenerationType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.elasticsearch.common.UUIDs;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.CompletionField;
 import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
 
 
 @Document(indexName = "poi")
@@ -22,7 +24,12 @@ public class Poi {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String poi_id;
+    @Field
+    private String id;
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Field(name = "poi_id")
+    private String poiId;
 
     private String poi_code;
 
@@ -60,7 +67,8 @@ public class Poi {
         this.phone_c = request.getPhoneC();
         this.zip_code = request.getZipCode();
         this.location = new Location(request.getLon(), request.getLan());
-        poi_suggest = input[0];
+        this.poiId = UUIDs.randomBase64UUID();
+//        poi_suggest = input[0];
     }
 
     public Poi update(UpdatePoi.Request request, String[] input) {
@@ -72,7 +80,7 @@ public class Poi {
         this.phone_c = request.getPhoneC();
         this.zip_code = request.getZipCode();
         this.location = new Location(request.getLon(), request.getLan());
-        poi_suggest = input[0];
+//        poi_suggest = input[0];
         return this;
     }
 }
