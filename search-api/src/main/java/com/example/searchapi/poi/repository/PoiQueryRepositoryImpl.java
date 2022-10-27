@@ -81,10 +81,10 @@ public class PoiQueryRepositoryImpl implements PoiQueryRepository {
      * @return
      */
     @Override
-    public List<Poi> searchPoiByName(String name, PageRequest pageRequest) {
+    public List<Poi> searchPoiByName(String name, PageRequest pageRequest, float minScore) {
 
         NativeSearchQuery query = new NativeSearchQueryBuilder()
-            .withMinScore(3)
+            .withMinScore(minScore)
             .withQuery(boolQuery()
                 .should(queryStringQuery(name)
                     .field("fname.keyword", 2f)
@@ -128,9 +128,9 @@ public class PoiQueryRepositoryImpl implements PoiQueryRepository {
      */
     @Override
     public List<Poi> searchPoiByNameFilterPoiCodes(String name, String field, String category,
-        PageRequest pageRequest) {
+        PageRequest pageRequest, float minScore) {
         NativeSearchQuery query = new NativeSearchQueryBuilder()
-            .withMinScore(3)
+            .withMinScore(minScore)
             .withQuery(boolQuery()
                 .should(queryStringQuery(name)
                     .field("fname.keyword", 2f)

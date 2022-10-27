@@ -6,12 +6,11 @@ import com.example.searchapi.poi.dto.UpdatePoi;
 import com.example.searchapi.poi.model.Poi;
 import com.example.searchapi.poi.repository.PoiQueryRepository;
 import com.example.searchapi.poi.repository.PoiRepository;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Slf4j
@@ -34,6 +33,12 @@ public class PoiService {
     }
 
     @Transactional(readOnly = true)
+    public Poi searchPoiByPoiId(String poiId) {
+        return poiRepository.findPoiByPoiId(poiId)
+            .orElseThrow(NotFoundPoiException::new);
+    }
+
+    @Transactional(readOnly = true)
     public List<Poi> searchQueryByPoiCode(String poiCode, PageRequest pageRequest) {
         log.info("request address by poi_code {}", poiCode);
         return poiQueryRepository.searchAddressByPoiCode(poiCode, pageRequest);
@@ -51,9 +56,9 @@ public class PoiService {
         return this.poiQueryRepository.searchAddressByPoiCodes(poiCategories, pageRequest);
     }
 
-    public List<Poi> searchQueryByName(String name, PageRequest pageRequest) {
+    public List<Poi> searchQueryByName(String name, PageRequest pageRequest, float minScore) {
         log.info("request poi by name");
-        return this.poiQueryRepository.searchPoiByName(name, pageRequest);
+        return this.poiQueryRepository.searchPoiByName(name, pageRequest, minScore);
     }
 
     public Poi createPoi(CreatePoi.Request request) {
@@ -63,7 +68,9 @@ public class PoiService {
 
     public void deletePoi(String poiId) {
         log.info("delete poi : {} ", poiId);
-        this.poiRepository.deleteById(poiId);
+        if (this.poiRepository.deleteByPoiId(poiId) == 0) {
+            throw new NotFoundPoiException();
+        }
     }
 
     private String[] splitRequest(String fname, String cname) {
@@ -74,7 +81,7 @@ public class PoiService {
     }
 
     public UpdatePoi.Response updatePoi(String id, UpdatePoi.Request request) {
-        Poi poi = this.poiRepository.findById(id)
+        Poi poi = this.poiRepository.findPoiByPoiId(id)
             .orElseThrow(NotFoundPoiException::new);
         String[] input = splitRequest(request.getFname(), request.getCname());
         Poi update = poi.update(request, input);
@@ -84,7 +91,9 @@ public class PoiService {
 
     @Transactional(readOnly = true)
     public List<Poi> searchPoiByNameFilterPoiCodes(String name, String field, String category,
+        float minScore,
         PageRequest of) {
-        return this.poiQueryRepository.searchPoiByNameFilterPoiCodes(name, field, category, of);
+        return this.poiQueryRepository.searchPoiByNameFilterPoiCodes(name, field, category, of,
+            minScore);
     }
 }

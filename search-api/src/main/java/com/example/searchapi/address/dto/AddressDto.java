@@ -3,12 +3,10 @@ package com.example.searchapi.address.dto;
 import com.example.searchapi.address.model.Address;
 import com.example.searchapi.poi.dto.CreatePoi;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.validation.annotation.Validated;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class AddressDto {
 
@@ -74,7 +72,7 @@ public class AddressDto {
         private int sanBun;
 
         public ResponseCreate(Address address) {
-            this.poiId = address.getPoi_id();
+            this.poiId = address.getId();
             this.poiCode = address.getPoi_code();
             this.address = address.getAddress();
             this.primaryBun = address.getPrimary_bun();

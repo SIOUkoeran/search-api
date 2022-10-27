@@ -1,4 +1,4 @@
-esHost: localhost:9200, localhost:9201
+esHost: localhost:9201, localhost:9202
 
 logging:
   level:

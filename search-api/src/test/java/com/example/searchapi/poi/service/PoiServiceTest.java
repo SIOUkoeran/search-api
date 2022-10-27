@@ -9,10 +9,11 @@ import com.example.searchapi.poi.dto.CreatePoi;
 import com.example.searchapi.poi.dto.UpdatePoi;
 import com.example.searchapi.poi.model.Poi;
 import com.example.searchapi.poi.repository.PoiRepository;
+import java.util.LinkedList;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.slf4j.Logger;
@@ -20,8 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
-
-import java.util.*;
 
 @SpringBootTest
 class PoiServiceTest extends BaseTest {
@@ -48,8 +47,8 @@ class PoiServiceTest extends BaseTest {
         log.info("ready to delete Poi");
         mustDeletePoiId
             .forEach(poiId -> {
-                this.poiRepository.deleteById(poiId);
-                this.addressRepository.deleteById(poiId);
+                this.poiRepository.deleteByPoiId(poiId);
+                this.addressRepository.deleteByPoiId(poiId);
             });
         log.info("success delete Poi");
         mustDeletePoiId.clear();
@@ -74,19 +73,19 @@ class PoiServiceTest extends BaseTest {
         float lan,
         int zipCode) {
         CreatePoi.Request request = new CreatePoi.Request(poiCode, address, primary, secondary, -1
-            , fname, cname, phoneA, phoneB, phoneC, zipCode, lon, lan);
+            , fname, cname, phoneA, phoneB, phoneC, zipCode, lon, lan, "1");
         Poi poi = poiService.createPoi(request);
         CreateAddressDto.Response address1
-            = addressService.createAddress(new CreateAddressDto.Request(request), poi.getPoi_id());
-        log.info("poi {}", poi.getPoi_id());
-        Assertions.assertThat(poi.getPoi_id()).isEqualTo(address1.getPoiId());
+            = addressService.createAddress(new CreateAddressDto.Request(request), poi.getPoiId());
+        log.info("poi {}", poi.getPoiId());
+        Assertions.assertThat(poi.getPoiId()).isEqualTo(address1.getPoiId());
 
-        String poiPoi_id = this.poiRepository.findById(poi.getPoi_id()).get().getPoi_id();
-        String addressPoi_id = this.addressRepository.findById(address1.getPoiId()).get()
-            .getPoi_id();
+        Poi poi1 = this.poiRepository.findPoiByPoiId(poi.getPoiId()).get();
+        String addressPoi_id = this.addressRepository.findAddressByPoiId(address1.getPoiId()).get()
+            .getPoiId();
 
-        Assertions.assertThat(poiPoi_id).isEqualTo(addressPoi_id);
-        mustDeletePoiId.add(poiPoi_id);
+        Assertions.assertThat(poi1.getPoiId()).isEqualTo(addressPoi_id);
+        mustDeletePoiId.add(poi1.getPoiId());
     }
 
 
@@ -110,20 +109,20 @@ class PoiServiceTest extends BaseTest {
         String changeFname) {
 
         CreatePoi.Request request = new CreatePoi.Request(poiCode, address, primary, secondary, -1
-            , fname, cname, phoneA, phoneB, phoneC, zipCode, lon, lan);
+            , fname, cname, phoneA, phoneB, phoneC, zipCode, lon, lan, "1");
         Poi poi = this.poiService.createPoi(request);
-        UpdatePoi.Response updatedPoi = this.poiService.updatePoi(poi.getPoi_id(),
+        UpdatePoi.Response updatedPoi = this.poiService.updatePoi(poi.getPoiId(),
             new UpdatePoi.Request(poiCode,
                 changeFname, cname, phoneA, phoneB, phoneC, zipCode, lon, lan));
-        Poi findPoi = this.poiRepository.findById(poi.getPoi_id())
+        Poi findPoi = this.poiRepository.findPoiByPoiId(poi.getPoiId())
             .orElseThrow(NotFoundPoiException::new);
 
         Assertions.assertThat(findPoi.getFname()).isEqualTo(changeFname);
-        mustDeletePoiId.add(findPoi.getPoi_id());
+        mustDeletePoiId.add(findPoi.getPoiId());
     }
 
     @ParameterizedTest
-    @CsvSource({"오시오,식사,large_category", "오시호,식사,large_category", "오시오장,식사,large_category"})
+    @CsvSource({"오시오,쇼핑,large_category", "오시호,쇼핑,large_category", "오시오장,쇼핑,large_category"})
     @DisplayName("poi 명칭 필터 검색 서비스 로직 테스트")
     void testFilterSearchPoiName(
         String fname,
@@ -131,7 +130,7 @@ class PoiServiceTest extends BaseTest {
         String field
     ) {
         List<Poi> pois
-            = this.poiService.searchPoiByNameFilterPoiCodes(fname, field, category,
+            = this.poiService.searchPoiByNameFilterPoiCodes(fname, category, field, 0.3f,
             PageRequest.of(0, 10));
         Assertions.assertThat(pois.size()).isEqualTo(5);
     }

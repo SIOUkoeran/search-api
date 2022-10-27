@@ -35,8 +35,7 @@ public class AddressController {
     }
 
     @GetMapping(value = "", params = {"poi_id"})
-    public Address searchAllAddressByPoiId(@RequestParam("poi_id") String poiId,
-        @RequestParam("page") int page) {
+    public Address searchAddressByPoiId(@RequestParam("poi_id") String poiId) {
         return this.addressService.searchAddressByPoiId(poiId);
     }
 

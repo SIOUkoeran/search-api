@@ -4,11 +4,10 @@ package com.example.searchapi.poi.dto;
 import com.example.searchapi.address.dto.CreateAddressDto;
 import com.example.searchapi.poi.model.Poi;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 public class CreatePoi {
 
@@ -59,7 +58,7 @@ public class CreatePoi {
 
         public Request(String poiCode, String address, int primaryBun, int secondaryBun, int sanBun,
             String fname, String cname, int phoneA, int phoneB, int phoneC, int zipCode, float lon,
-            float lan) {
+            float lan, String poiId) {
             this.poiCode = poiCode;
             this.address = address;
             this.primaryBun = primaryBun;
